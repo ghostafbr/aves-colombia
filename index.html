@@ -160,7 +160,7 @@ h1 .count{color:var(--gold);font-variant-numeric:tabular-nums}
 .empty p{margin:0}
 
 /* Navegación inferior */
-.bnav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--line);padding:6px var(--gut-r) calc(6px + env(safe-area-inset-bottom,0px)) var(--gut-l);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;box-shadow:0 -6px 20px rgba(0,0,0,.06)}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--line);padding:6px var(--gut-r) calc(6px + env(safe-area-inset-bottom,0px)) var(--gut-l);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;box-shadow:0 -6px 20px rgba(0,0,0,.06)}
 @media (min-width:900px){.bnav{display:none}}
 .bnav button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:52px;border-radius:12px;font:700 11px var(--body);color:var(--muted)}
 .bnav button .ic{width:24px;height:24px}
@@ -307,20 +307,59 @@ details.tok[open] summary .chev{transform:rotate(180deg)}
 .toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:999px;font-weight:700;z-index:95;max-width:calc(100% - 32px);display:flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:up .2s ease-out}
 @media (min-width:900px){.toast{bottom:24px}}
 @keyframes up{from{transform:translate(-50%,12px);opacity:0}}
+.lensline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.lightrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (max-width:420px){.lightrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.lightrow .set:nth-child(2){grid-column:1/-1;order:3}}
+.rows{display:flex;flex-direction:column;gap:6px}
+.trow{display:flex;align-items:center;gap:12px;padding:6px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);cursor:pointer;min-width:0;text-align:left;width:100%}
+.trow:active{transform:scale(.99)}
+.trow img{width:56px;height:56px;border-radius:var(--r-sm);object-fit:cover;flex:0 0 56px;background:var(--sunk)}
+.trow .lead{width:56px;height:56px;border-radius:var(--r-sm);background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:0 0 56px}
+.trow .t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.trow .t span{font-weight:700;overflow-wrap:anywhere}
+.trow .t small{color:var(--muted);font:400 12px var(--mono);display:flex;gap:4px 10px;flex-wrap:wrap;align-items:center}
+.trow .num{font:700 15px var(--mono);font-variant-numeric:tabular-nums;padding-right:8px;text-align:right}
+.trow .num small{display:block;font:400 10px var(--mono);color:var(--muted)}
+.trow > .ic{color:var(--muted);margin-right:6px}
+.trow .tick{position:static;flex:0 0 42px;border-color:var(--line);background:var(--sunk);color:var(--ink);backdrop-filter:none;-webkit-backdrop-filter:none;margin-right:2px}
+.trow .tick.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.trow .tick.inat{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.lbl{display:block;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.pickbtn{justify-content:flex-start;width:100%;font-weight:700}
+.pickbtn span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.pickbtn .chev{opacity:.6}
+.seg.wide{display:flex;width:100%}
+.seg.wide button{flex:1 1 0;justify-content:center;height:40px;font-size:14px}
+.sound{display:flex;flex-direction:column;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px}
+.sound audio{width:100%;height:40px}
+.sound small{font-size:11px;color:var(--muted);overflow-wrap:anywhere}
+.quiz-photo{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r);background:linear-gradient(90deg,var(--sunk),var(--surface),var(--sunk));background-size:200% 100%;animation:sh 1.2s infinite}
+.quiz-photo.ready{animation:none;background:var(--sunk)}
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qopts .btn{min-height:58px;padding:10px 16px;white-space:normal;line-height:1.25;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;text-align:left}
+.qopts .btn small{font-weight:400;font-style:italic;color:var(--muted);font-size:13px}
+.qopts .btn.right{background:color-mix(in srgb,var(--ok) 18%,var(--surface));border-color:var(--ok)}
+.qopts .btn.wrong{background:color-mix(in srgb,var(--danger) 14%,var(--surface));border-color:var(--danger)}
+.qhead{display:flex;justify-content:space-between;align-items:center;font:600 13px var(--mono);color:var(--muted)}
+.qhead span{display:inline-flex;align-items:center;gap:6px}
+.qbar{height:6px;background:var(--sunk);border-radius:3px;overflow:hidden}
+.qbar i{display:block;height:100%;background:var(--accent);transition:width .3s}
 footer{padding-block:20px 32px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/> <circle cx="12" cy="13" r="3"/></symbol><symbol id="i-list-checks" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/> <path d="m3 7 2 2 4-4"/> <path d="M13 6h8"/> <path d="M13 12h8"/> <path d="M13 18h8"/></symbol><symbol id="i-dices" viewBox="0 0 24 24"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/> <path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/> <path d="M6 18h.01"/> <path d="M10 14h.01"/> <path d="M15 6h.01"/> <path d="M18 9h.01"/></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/> <circle cx="12" cy="10" r="3"/></symbol><symbol id="i-locate-fixed" viewBox="0 0 24 24"><line x1="2" x2="5" y1="12" y2="12"/> <line x1="19" x2="22" y1="12" y2="12"/> <line x1="12" x2="12" y1="2" y2="5"/> <line x1="12" x2="12" y1="19" y2="22"/> <circle cx="12" cy="12" r="7"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/> <path d="M19 12H5"/></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/> <circle cx="6" cy="12" r="3"/> <circle cx="18" cy="19" r="3"/> <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/> <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/> <path d="M12 5v14"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-image-up" viewBox="0 0 24 24"><path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/> <path d="m14 19.5 3-3 3 3"/> <path d="M17 22v-5.5"/> <circle cx="9" cy="9" r="2"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol><symbol id="i-layout-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/> <rect width="7" height="7" x="14" y="3" rx="1"/> <rect width="7" height="7" x="14" y="14" rx="1"/> <rect width="7" height="7" x="3" y="14" rx="1"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M3 12h.01"/> <path d="M3 18h.01"/> <path d="M3 6h.01"/> <path d="M8 12h13"/> <path d="M8 18h13"/> <path d="M8 6h13"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24"><path d="M8 2v4"/> <path d="M16 2v4"/> <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M3 10h18"/> <path d="M8 14h.01"/> <path d="M12 14h.01"/> <path d="M16 14h.01"/> <path d="M8 18h.01"/> <path d="M12 18h.01"/> <path d="M16 18h.01"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/> <path d="M12 9v4"/> <path d="M12 17h.01"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><line x1="21" x2="14" y1="4" y2="4"/> <line x1="10" x2="3" y1="4" y2="4"/> <line x1="21" x2="12" y1="12" y2="12"/> <line x1="8" x2="3" y1="12" y2="12"/> <line x1="21" x2="16" y1="20" y2="20"/> <line x1="12" x2="3" y1="20" y2="20"/> <line x1="14" x2="14" y1="2" y2="6"/> <line x1="8" x2="8" y1="10" y2="14"/> <line x1="16" x2="16" y1="18" y2="22"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/> <path d="M21 3v5h-5"/> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/> <path d="M8 16H3v5"/></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="i-clipboard-paste" viewBox="0 0 24 24"><path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1Z"/> <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2M11 14h10"/> <path d="m17 10 4 4-4 4"/></symbol><symbol id="i-bird" viewBox="0 0 24 24"><path d="M16 7h.01"/> <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/> <path d="m20 7 2 .5-2 .5"/> <path d="M10 18v3"/> <path d="M14 17.75V21"/> <path d="M7 18a6 6 0 0 0 3.84-10.61"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/> <path d="M20 3v4"/> <path d="M22 5h-4"/> <path d="M4 17v2"/> <path d="M5 18H3"/></symbol><symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01"/> <path d="M8.5 16.429a5 5 0 0 1 7 0"/> <path d="M5 12.859a10 10 0 0 1 5.17-2.69"/> <path d="M19 12.859a10 10 0 0 0-2.007-1.523"/> <path d="M2 8.82a15 15 0 0 1 4.177-2.643"/> <path d="M22 8.82a15 15 0 0 0-11.288-3.764"/> <path d="m2 2 20 20"/></symbol><symbol id="i-aperture" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="m14.31 8 5.74 9.94"/> <path d="M9.69 8h11.48"/> <path d="m7.38 12 5.74-9.94"/> <path d="M9.69 16 3.95 6.06"/> <path d="M14.31 16H2.83"/> <path d="m16.62 12-5.74 9.94"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/> <line x1="12" x2="15" y1="14" y2="11"/> <circle cx="12" cy="14" r="8"/></symbol><symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/> <path d="m14.5 12.5 2-2"/> <path d="m11.5 9.5 2-2"/> <path d="m8.5 6.5 2-2"/> <path d="m17.5 15.5 2-2"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6"/> <path d="M10 14 21 3"/> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol><symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/> <circle cx="6" cy="18" r="3"/> <circle cx="18" cy="16" r="3"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/> <path d="M15 5.764v15"/> <path d="M9 3.236v15"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/> <path d="M2 12h20"/></symbol><symbol id="i-arrow-up-down" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/> <path d="M17 20V4"/> <path d="m3 8 4-4 4 4"/> <path d="M7 4v16"/></symbol><symbol id="i-feather" viewBox="0 0 24 24"><path d="M12.67 19a2 2 0 0 0 1.416-.588l6.154-6.172a6 6 0 0 0-8.49-8.49L5.586 9.914A2 2 0 0 0 5 11.328V18a1 1 0 0 0 1 1z"/> <path d="M16 8 2 22"/> <path d="M17.5 15H9"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/> <circle cx="12" cy="12" r="10"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/> <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/> <path d="M4 22h16"/> <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/> <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/> <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="m9 12 2 2 4-4"/></symbol><symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/> <path d="M12 17h.01"/></symbol><symbol id="i-shield-alert" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/> <path d="M12 8v4"/> <path d="M12 16h.01"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/> <path d="M12 2v2"/> <path d="M12 20v2"/> <path d="m4.93 4.93 1.41 1.41"/> <path d="m17.66 17.66 1.41 1.41"/> <path d="M2 12h2"/> <path d="M20 12h2"/> <path d="m6.34 17.66-1.41 1.41"/> <path d="m19.07 4.93-1.41 1.41"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol><symbol id="i-telescope" viewBox="0 0 24 24"><path d="m10.065 12.493-6.18 1.318a.934.934 0 0 1-1.108-.702l-.537-2.15a1.07 1.07 0 0 1 .691-1.265l13.504-4.44"/> <path d="m13.56 11.747 4.332-.924"/> <path d="m16 21-3.105-6.21"/> <path d="M16.485 5.94a2 2 0 0 1 1.455-2.425l1.09-.272a1 1 0 0 1 1.212.727l1.515 6.06a1 1 0 0 1-.727 1.213l-1.09.272a2 2 0 0 1-2.425-1.455z"/> <path d="m6.158 8.633 1.114 4.456"/> <path d="m8 21 3.105-6.21"/> <circle cx="12" cy="13" r="2"/></symbol><symbol id="i-crosshair" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <line x1="22" x2="18" y1="12" y2="12"/> <line x1="6" x2="2" y1="12" y2="12"/> <line x1="12" x2="12" y1="6" y2="2"/> <line x1="12" x2="12" y1="22" y2="18"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-trees" viewBox="0 0 24 24"><path d="M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z"/> <path d="M7 16v6"/> <path d="M13 19v3"/> <path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5"/></symbol></svg>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/> <circle cx="12" cy="13" r="3"/></symbol><symbol id="i-list-checks" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/> <path d="m3 7 2 2 4-4"/> <path d="M13 6h8"/> <path d="M13 12h8"/> <path d="M13 18h8"/></symbol><symbol id="i-dices" viewBox="0 0 24 24"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/> <path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/> <path d="M6 18h.01"/> <path d="M10 14h.01"/> <path d="M15 6h.01"/> <path d="M18 9h.01"/></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/> <circle cx="12" cy="10" r="3"/></symbol><symbol id="i-locate-fixed" viewBox="0 0 24 24"><line x1="2" x2="5" y1="12" y2="12"/> <line x1="19" x2="22" y1="12" y2="12"/> <line x1="12" x2="12" y1="2" y2="5"/> <line x1="12" x2="12" y1="19" y2="22"/> <circle cx="12" cy="12" r="7"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/> <path d="M19 12H5"/></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/> <circle cx="6" cy="12" r="3"/> <circle cx="18" cy="19" r="3"/> <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/> <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/> <path d="M12 5v14"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-image-up" viewBox="0 0 24 24"><path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/> <path d="m14 19.5 3-3 3 3"/> <path d="M17 22v-5.5"/> <circle cx="9" cy="9" r="2"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol><symbol id="i-layout-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/> <rect width="7" height="7" x="14" y="3" rx="1"/> <rect width="7" height="7" x="14" y="14" rx="1"/> <rect width="7" height="7" x="3" y="14" rx="1"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M3 12h.01"/> <path d="M3 18h.01"/> <path d="M3 6h.01"/> <path d="M8 12h13"/> <path d="M8 18h13"/> <path d="M8 6h13"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24"><path d="M8 2v4"/> <path d="M16 2v4"/> <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M3 10h18"/> <path d="M8 14h.01"/> <path d="M12 14h.01"/> <path d="M16 14h.01"/> <path d="M8 18h.01"/> <path d="M12 18h.01"/> <path d="M16 18h.01"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/> <path d="M12 9v4"/> <path d="M12 17h.01"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><line x1="21" x2="14" y1="4" y2="4"/> <line x1="10" x2="3" y1="4" y2="4"/> <line x1="21" x2="12" y1="12" y2="12"/> <line x1="8" x2="3" y1="12" y2="12"/> <line x1="21" x2="16" y1="20" y2="20"/> <line x1="12" x2="3" y1="20" y2="20"/> <line x1="14" x2="14" y1="2" y2="6"/> <line x1="8" x2="8" y1="10" y2="14"/> <line x1="16" x2="16" y1="18" y2="22"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/> <path d="M21 3v5h-5"/> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/> <path d="M8 16H3v5"/></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="i-clipboard-paste" viewBox="0 0 24 24"><path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1Z"/> <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2M11 14h10"/> <path d="m17 10 4 4-4 4"/></symbol><symbol id="i-bird" viewBox="0 0 24 24"><path d="M16 7h.01"/> <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/> <path d="m20 7 2 .5-2 .5"/> <path d="M10 18v3"/> <path d="M14 17.75V21"/> <path d="M7 18a6 6 0 0 0 3.84-10.61"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/> <path d="M20 3v4"/> <path d="M22 5h-4"/> <path d="M4 17v2"/> <path d="M5 18H3"/></symbol><symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01"/> <path d="M8.5 16.429a5 5 0 0 1 7 0"/> <path d="M5 12.859a10 10 0 0 1 5.17-2.69"/> <path d="M19 12.859a10 10 0 0 0-2.007-1.523"/> <path d="M2 8.82a15 15 0 0 1 4.177-2.643"/> <path d="M22 8.82a15 15 0 0 0-11.288-3.764"/> <path d="m2 2 20 20"/></symbol><symbol id="i-aperture" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="m14.31 8 5.74 9.94"/> <path d="M9.69 8h11.48"/> <path d="m7.38 12 5.74-9.94"/> <path d="M9.69 16 3.95 6.06"/> <path d="M14.31 16H2.83"/> <path d="m16.62 12-5.74 9.94"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/> <line x1="12" x2="15" y1="14" y2="11"/> <circle cx="12" cy="14" r="8"/></symbol><symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/> <path d="m14.5 12.5 2-2"/> <path d="m11.5 9.5 2-2"/> <path d="m8.5 6.5 2-2"/> <path d="m17.5 15.5 2-2"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6"/> <path d="M10 14 21 3"/> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol><symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/> <circle cx="6" cy="18" r="3"/> <circle cx="18" cy="16" r="3"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/> <path d="M15 5.764v15"/> <path d="M9 3.236v15"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/> <path d="M2 12h20"/></symbol><symbol id="i-arrow-up-down" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/> <path d="M17 20V4"/> <path d="m3 8 4-4 4 4"/> <path d="M7 4v16"/></symbol><symbol id="i-feather" viewBox="0 0 24 24"><path d="M12.67 19a2 2 0 0 0 1.416-.588l6.154-6.172a6 6 0 0 0-8.49-8.49L5.586 9.914A2 2 0 0 0 5 11.328V18a1 1 0 0 0 1 1z"/> <path d="M16 8 2 22"/> <path d="M17.5 15H9"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/> <circle cx="12" cy="12" r="10"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/> <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/> <path d="M4 22h16"/> <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/> <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/> <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="m9 12 2 2 4-4"/></symbol><symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/> <path d="M12 17h.01"/></symbol><symbol id="i-shield-alert" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/> <path d="M12 8v4"/> <path d="M12 16h.01"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/> <path d="M12 2v2"/> <path d="M12 20v2"/> <path d="m4.93 4.93 1.41 1.41"/> <path d="m17.66 17.66 1.41 1.41"/> <path d="M2 12h2"/> <path d="M20 12h2"/> <path d="m6.34 17.66-1.41 1.41"/> <path d="m19.07 4.93-1.41 1.41"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol><symbol id="i-telescope" viewBox="0 0 24 24"><path d="m10.065 12.493-6.18 1.318a.934.934 0 0 1-1.108-.702l-.537-2.15a1.07 1.07 0 0 1 .691-1.265l13.504-4.44"/> <path d="m13.56 11.747 4.332-.924"/> <path d="m16 21-3.105-6.21"/> <path d="M16.485 5.94a2 2 0 0 1 1.455-2.425l1.09-.272a1 1 0 0 1 1.212.727l1.515 6.06a1 1 0 0 1-.727 1.213l-1.09.272a2 2 0 0 1-2.425-1.455z"/> <path d="m6.158 8.633 1.114 4.456"/> <path d="m8 21 3.105-6.21"/> <circle cx="12" cy="13" r="2"/></symbol><symbol id="i-crosshair" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <line x1="22" x2="18" y1="12" y2="12"/> <line x1="6" x2="2" y1="12" y2="12"/> <line x1="12" x2="12" y1="6" y2="2"/> <line x1="12" x2="12" y1="22" y2="18"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-trees" viewBox="0 0 24 24"><path d="M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z"/> <path d="M7 16v6"/> <path d="M13 19v3"/> <path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5"/></symbol><symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="19" r="3"/> <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/> <circle cx="18" cy="5" r="3"/></symbol><symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M12 2v8"/> <path d="m4.93 10.93 1.41 1.41"/> <path d="M2 18h2"/> <path d="M20 18h2"/> <path d="m19.07 10.93-1.41 1.41"/> <path d="M22 22H2"/> <path d="m8 6 4-4 4 4"/> <path d="M16 18a4 4 0 0 0-8 0"/></symbol><symbol id="i-sunset" viewBox="0 0 24 24"><path d="M12 10V2"/> <path d="m4.93 10.93 1.41 1.41"/> <path d="M2 18h2"/> <path d="M20 18h2"/> <path d="m19.07 10.93-1.41 1.41"/> <path d="M22 22H2"/> <path d="m16 6-4 4-4-4"/> <path d="M16 18a4 4 0 0 0-8 0"/></symbol><symbol id="i-volume-2" viewBox="0 0 24 24"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/> <path d="M16 9a5 5 0 0 1 0 6"/> <path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></symbol><symbol id="i-graduation-cap" viewBox="0 0 24 24"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/> <path d="M22 10v6"/> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol><symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <circle cx="12" cy="12" r="6"/> <circle cx="12" cy="12" r="2"/></symbol><symbol id="i-droplets" viewBox="0 0 24 24"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/> <path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></symbol><symbol id="i-turtle" viewBox="0 0 24 24"><path d="m12 10 2 4v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3a8 8 0 1 0-16 0v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3l2-4h4Z"/> <path d="M4.82 7.9 8 10"/> <path d="M15.18 7.9 12 10"/> <path d="M16.93 10H20a2 2 0 0 1 0 4H2"/></symbol><symbol id="i-squirrel" viewBox="0 0 24 24"><path d="M15.236 22a3 3 0 0 0-2.2-5"/> <path d="M16 20a3 3 0 0 1 3-3h1a2 2 0 0 0 2-2v-2a4 4 0 0 0-4-4V4"/> <path d="M18 13h.01"/> <path d="M18 6a4 4 0 0 0-4 4 7 7 0 0 0-7 7c0-5 4-5 4-10.5a4.5 4.5 0 1 0-9 0 2.5 2.5 0 0 0 5 0C7 10 3 11 3 17c0 2.8 2.2 5 5 5h10"/></symbol><symbol id="i-bug" viewBox="0 0 24 24"><path d="m8 2 1.88 1.88"/> <path d="M14.12 3.88 16 2"/> <path d="M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"/> <path d="M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"/> <path d="M12 20v-9"/> <path d="M6.53 9C4.6 8.8 3 7.1 3 5"/> <path d="M6 13H2"/> <path d="M3 21c0-2.1 1.7-3.9 3.8-4"/> <path d="M20.97 5c0 2.1-1.6 3.8-3.5 4"/> <path d="M22 13h-4"/> <path d="M17.2 17c2.1.1 3.8 1.9 3.8 4"/></symbol><symbol id="i-plane-landing" viewBox="0 0 24 24"><path d="M2 22h20"/> <path d="M3.77 10.77 2 9l2-4.5 1.1.55c.55.28.9.84.9 1.45s.35 1.17.9 1.45L8 8.5l3-6 1.05.53a2 2 0 0 1 1.09 1.52l.72 5.4a2 2 0 0 0 1.09 1.52l4.4 2.2c.42.22.78.55 1.01.96l.6 1.03c.49.88-.06 1.98-1.06 2.1l-1.18.15c-.47.06-.95-.02-1.37-.24L4.29 11.15a2 2 0 0 1-.52-.38Z"/></symbol><symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/> <path d="m18 2 4 4-4 4"/> <path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/> <path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/> <path d="m18 14 4 4-4 4"/></symbol><symbol id="i-circle-x" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="m15 9-6 6"/> <path d="m9 9 6 6"/></symbol><symbol id="i-map-pinned" viewBox="0 0 24 24"><path d="M18 8c0 3.613-3.869 7.429-5.393 8.795a1 1 0 0 1-1.214 0C9.87 15.429 6 11.613 6 8a6 6 0 0 1 12 0"/> <circle cx="12" cy="8" r="2"/> <path d="M8.714 14h-3.71a1 1 0 0 0-.948.683l-2.004 6A1 1 0 0 0 3 22h18a1 1 0 0 0 .948-1.316l-2-6a1 1 0 0 0-.949-.684h-3.712"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol></svg>
 
 <header class="appbar">
   <div class="wrap">
     <div class="brand"><span class="logo"><svg class="ic"><use href="#i-bird"/></svg></span><b>Aves de Colombia</b></div>
     <div class="desk-actions">
       <button class="btn primary" type="button" data-act="identify"><svg class="ic"><use href="#i-camera"/></svg>Identificar foto</button>
+      <button class="btn" type="button" data-act="plan"><svg class="ic"><use href="#i-route"/></svg>Plan de salida</button>
+      <button class="btn" type="button" data-act="quiz"><svg class="ic"><use href="#i-graduation-cap"/></svg>Quiz</button>
       <button class="btn" type="button" data-act="account"><svg class="ic"><use href="#i-list-checks"/></svg>Mi lista</button>
-      <button class="btn" type="button" data-act="random"><svg class="ic"><use href="#i-dices"/></svg>Al azar</button>
     </div>
   </div>
 </header>
@@ -328,7 +367,7 @@ footer{padding-block:20px 32px;color:var(--muted);font-size:13px;border-top:1px 
 <section class="hero wrap">
   <div>
     <div class="eyebrow">Guía de campo · datos en vivo de iNaturalist</div>
-    <h1><span class="count" id="heroCount">—</span> especies<br>en <span id="heroPlace">Colombia</span></h1>
+    <h1><span class="count" id="heroCount">—</span> especies de <span id="heroGroup">aves</span><br>en <span id="heroPlace">Colombia</span></h1>
     <p class="lede">El país con más especies de aves del mundo. Filtra por lugar, mes y qué tan alcanzables son con tu equipo; abre una para ver fotos, cuándo y dónde aparece, y valida tus fotos.</p>
   </div>
   <button class="daily" id="daily" type="button" hidden></button>
@@ -372,9 +411,10 @@ footer{padding-block:20px 32px;color:var(--muted);font-size:13px;border-top:1px 
 
 <nav class="bnav" aria-label="Navegación">
   <button type="button" class="on" data-act="explore"><svg class="ic"><use href="#i-compass"/></svg>Explorar</button>
+  <button type="button" data-act="plan"><svg class="ic"><use href="#i-route"/></svg>Plan</button>
   <button type="button" class="cta" data-act="identify"><svg class="ic"><use href="#i-camera"/></svg>Identificar</button>
+  <button type="button" data-act="quiz"><svg class="ic"><use href="#i-graduation-cap"/></svg>Quiz</button>
   <button type="button" data-act="account"><svg class="ic"><use href="#i-list-checks"/></svg>Mi lista</button>
-  <button type="button" data-act="random"><svg class="ic"><use href="#i-dices"/></svg>Al azar</button>
 </nav>
 
 <div class="scrim" id="scrim"></div>
@@ -414,7 +454,30 @@ const MONTHS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov
 const MONTHS_FULL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const PRESETS = ['Colombia','Valle del Cauca','San Andrés','Cauca','Nariño','Antioquia','Magdalena','La Guajira','Meta','Amazonas','Chocó','Quindío','Caldas','Boyacá','Risaralda','Santander'];
 const REACH = {1:'Fácil', 2:'Posible', 3:'Difícil'};
-const REACH_DESC = {1:'Grandes o confiadas: tu 16-50 o 56mm alcanzan', 2:'Con comedero, bebedero o recorte del RAW', 3:'Pequeñas, lejanas o huidizas: necesitan teleobjetivo'};
+const REACH_DESC = {1:'Llenas el encuadre sin complicarte', 2:'Con paciencia, acercamiento o recorte del RAW', 3:'Muy pequeña, lejana o huidiza para ese lente'};
+const GROUPS = {
+  aves:{id:3, label:'Aves', noun:'aves', icon:'bird', af:'Ave', ph:'Buscar barranquero, Tangara, colibrí…', sub:'Guía completa con consejos por familia'},
+  mariposas:{id:47224, label:'Mariposas', noun:'mariposas', icon:'bug', af:'Insecto', ph:'Buscar Morpho, Heliconius…', sub:'Ideal para macro con tus tubos Meike', reach:{tamron:1, prime:1, kit:2},
+    tips:{g:'Mariposa', dist:'0,3–1,5 m', vel:'1/500–1/1000 s', ap:'f/5.6–f/8', tip:'Temprano en la mañana están frías y quietas: es el mejor momento. Acércate despacio y sin proyectar tu sombra sobre ellas. Ponte paralelo a las alas para tenerlas enteras en foco.', eq:'El Tamron enfoca muy cerca (1:2 en angular, ~1 m a 300mm): medio macro sin espantarlas. El 56mm con tubos Meike para el detalle de las escamas.'}},
+  anfibios:{id:20978, label:'Anfibios', noun:'anfibios', icon:'droplets', af:'Animal', ph:'Buscar rana, Dendrobates…', sub:'Ranas y salamandras, sobre todo de noche', reach:{tamron:1, prime:1, kit:2},
+    tips:{g:'Rana', dist:'0,2–1 m', vel:'1/200–1/500 s', ap:'f/5.6–f/11', tip:'Sal de noche después de la lluvia con linterna frontal de luz cálida. Ilumina de lado, no de frente. No las toques: su piel absorbe lo que tengas en las manos. Ponte a su altura.', eq:'El 56mm con tubos para ranas pequeñas; el Tamron a 1 m si son ariscas. Sin flash, la linterna es tu luz principal.'}},
+  reptiles:{id:26036, label:'Reptiles', noun:'reptiles', icon:'turtle', af:'Animal', ph:'Buscar iguana, lagartija…', sub:'Iguanas, lagartos, serpientes y tortugas', reach:{tamron:1, prime:2, kit:2},
+    tips:{g:'Reptil', dist:'1–5 m', vel:'1/500 s', ap:'f/5.6–f/8', tip:'Se asolean a media mañana en rocas y troncos: llegan lentos y quietos. Enfoca al ojo. Con serpientes mantén siempre la distancia.', eq:'El Tamron a 300mm te da distancia segura y fondo desenfocado.'}},
+  mamiferos:{id:40151, label:'Mamíferos', noun:'mamíferos', icon:'squirrel', af:'Animal', ph:'Buscar mono, ardilla, perezoso…', sub:'Monos, ardillas, perezosos, murciélagos', reach:{tamron:2, prime:3, kit:3},
+    tips:{g:'Mamífero', dist:'5–30 m', vel:'1/500–1/1000 s', ap:'f/5.6–f/6.3', tip:'Casi todos son crepusculares o nocturnos y muy desconfiados. Ardillas y monos en parques urbanos son el mejor entrenamiento. En reservas, pregunta por comederos y senderos activos.', eq:'El Tamron a 300mm es tu opción real; con el 56mm solo donde estén habituados a la gente.'}},
+  libelulas:{id:47792, label:'Libélulas', noun:'libélulas', icon:'bug', af:'Insecto', ph:'Buscar libélula, caballito del diablo…', sub:'Libélulas y caballitos del diablo', reach:{tamron:1, prime:2, kit:3},
+    tips:{g:'Libélula', dist:'0,8–2 m', vel:'1/1000 s', ap:'f/6.3–f/8', tip:'Vuelven a la misma percha una y otra vez: enfócala y espera. Mejor temprano, cuando aún están frías. Ponte paralelo al cuerpo para tener alas y ojos en foco.', eq:'El Tamron enfoca a ~1 m a 300mm: ideal para no espantarlas.'}}
+};
+const LENSES = {
+  all:{label:'Todo mi equipo', short:'Todo', sub:'El mejor lente para cada especie'},
+  tamron:{label:'Tamron 18-300', short:'Tamron', sub:'27–450mm equiv. · f/3.5–6.3'},
+  prime:{label:'Viltrox 56mm', short:'56mm', sub:'84mm equiv. · f/1.4'},
+  kit:{label:'Sony 16-50', short:'16-50', sub:'24–75mm equiv. · f/3.5–5.6'}
+};
+const fmtTime = x => x.toLocaleTimeString('es-CO', {hour:'numeric', minute:'2-digit', timeZone:'America/Bogota'});
+const addMin = (x, m) => new Date(x.getTime() + m * 60000);
+const localISO = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const shuffle = a => { for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const SORTS = {obs:'Más observadas', rare:'Más raras', az:'A → Z'};
 const $ = id => document.getElementById(id);
 const ic = (n, c = '') => `<svg class="ic ${c}"><use href="#i-${n}"/></svg>`;
@@ -438,11 +501,13 @@ function toast(msg, icon = 'check'){
 const saved = lsGet('aves-co-prefs', {});
 const state = {
   place: (saved.place && !saved.place.lat) ? saved.place : {id:COLOMBIA, name:'Colombia'},
+  group: GROUPS[saved.group] ? saved.group : 'aves', lens: LENSES[saved.lens] ? saved.lens : 'all', migr:false,
   month:'', family:'', reach:'', endemic:false, threatened:false,
   sort:'obs', q:'', view: saved.view || 'grid', mine:'all',
   items:[], filtered:[], shown:0, loadId:0, total:0
 };
-function savePrefs(){ lsSet('aves-co-prefs', {place: state.place.lat ? null : state.place, view: state.view}); }
+function savePrefs(){ lsSet('aves-co-prefs', {place: state.place.lat ? null : state.place, view: state.view, group: state.group, lens: state.lens}); }
+const groupId = () => GROUPS[state.group].id;
 let life = new Set(lsGet('aves-co-life', []));
 let inat = lsGet('aves-co-inat', {user:'', ids:[], at:0});
 let inatSet = new Set(inat.ids);
@@ -477,7 +542,13 @@ function trim(r){
 }
 
 /* ---------- Consejos por familia y alcance con tu equipo ---------- */
-const GEAR = 'Tu alcance hoy es el 56mm (84mm equiv.). Para aves pequeñas acércate a 2–4 m (comederos, bebederos, flores) o recorta el RAW: un recorte 2x deja ~6,5 MP, suficiente para pantalla e Instagram.';
+const GEAR = {
+  tamron:'Tamron a 300mm (450mm equiv.): el límite es la luz. A f/6.3 bajo sombra el ISO sube rápido; la a6700 rinde bien hasta 6400. Usa mínimo 1/1000 s a 300mm aunque el estabilizador ayude: el sujeto se mueve. Apoya los codos o el lente en una rama.',
+  prime:'Viltrox 56mm (84mm equiv.): luminoso pero corto. Para sujetos pequeños acércate a 2–4 m (comederos, bebederos, flores) o recorta el RAW: un recorte 2x deja ~6,5 MP, suficiente para pantalla e Instagram.',
+  kit:'Sony 16-50 a 50mm (75mm equiv.): para sujetos grandes o confiados y para mostrarlos dentro de su paisaje. Es oscuro (f/5.6): úsalo con buena luz.'
+};
+const TAMRON_EQ = {1:'A 300mm llenas bien el encuadre a la distancia indicada.', 2:'A 300mm alcanzas con un recorte moderado; acércate despacio y sin movimientos bruscos.', 3:'Aun a 300mm queda pequeña: prioriza la escena o el comportamiento.'};
+const NOCT = new Set(['Strigidae','Tytonidae','Caprimulgidae','Steatornithidae']);
 const TIPS = {
   Trochilidae:{r:1,g:'Colibrí',dist:'2–3 m de un bebedero',vel:'1/2500–1/4000 s',ap:'f/2–f/2.8',tip:'Espera junto a un bebedero o una heliconia en flor: repiten la ruta cada pocos minutos. El iridiscente solo aparece con la luz a tu espalda; de lado se ve negro. Para alas en movimiento baja a 1/250 s.',eq:'De los pocos grupos a tu alcance: 56mm a f/2 junto a un bebedero.'},
   Thraupidae:{r:2,g:'Tángara',dist:'3–6 m, comederos de fruta',vel:'1/1000–1/2000 s',ap:'f/2.8–f/4',tip:'Pon banano o papaya madura en un comedero y espera. Se mueven rápido: ráfaga alta y AF-C con detección de aves. Fondo verde lejano para que el color resalte.',eq:'Con comedero a 3 m el 56mm alcanza. Sin comedero quedan diminutas.'},
@@ -508,7 +579,7 @@ const TIPS = {
   Strigidae:{r:2,g:'Búho',dist:'5–15 m, de noche',vel:'1/125–1/250 s',ap:'f/1.4–f/2',tip:'No uses flash directo repetido. Busca con guía local. ISO alto sin miedo: hasta 6400 la a6700 rinde bien.',eq:'El 56mm f/1.4 es tu arma de noche.'},
   Tytonidae:{r:2,g:'Lechuza',dist:'5–15 m, de noche',vel:'1/125–1/250 s',ap:'f/1.4–f/2',tip:'Anidan en campanarios y galpones. Luz tenue lateral, nunca flash repetido.',eq:'El 56mm f/1.4 ayuda mucho.'},
   Caprimulgidae:{r:2,g:'Guardacaminos',dist:'3–8 m, noche',vel:'1/125 s',ap:'f/1.4',tip:'Se posan en caminos de tierra de noche; sus ojos brillan con la linterna. Luz suave lateral.',eq:'El 56mm f/1.4 es ideal en vías rurales.'},
-  Steatornithidae:{r:3,g:'Guácharo',dist:'—',vel:'1/125 s',ap:'f/1.4',tip:'Vive en cuevas oscuras; las visitas tienen reglas estrictas de luz. Infórmate antes.',eq:'Muy difícil.'},
+  Steatornithidae:{r:3,t:3,g:'Guácharo',dist:'—',vel:'1/125 s',ap:'f/1.4',tip:'Vive en cuevas oscuras; las visitas tienen reglas estrictas de luz. Infórmate antes.',eq:'Muy difícil.'},
   Picidae:{r:2,g:'Carpintero',dist:'5–12 m, troncos',vel:'1/1000 s',ap:'f/4',tip:'Rodean el tronco: quédate quieto y reaparecen de tu lado. El golpeteo te dice dónde están.',eq:'Con suerte a 5 m; si no, recorte fuerte.'},
   Cracidae:{r:2,g:'Pava / guacharaca',dist:'8–20 m',vel:'1/800 s',ap:'f/4',tip:'Activas al amanecer. Bajo dosel oscuro: ISO auto hasta 6400 y apertura máxima.',eq:'Las guacharacas de finca se dejan ver.'},
   Opisthocomidae:{r:1,g:'Pava hedionda',dist:'5–15 m',vel:'1/1000 s',ap:'f/4',tip:'Grupos ruidosos y lentos en la vegetación sobre ríos llaneros.',eq:'Accesible desde la orilla o en lancha.'},
@@ -537,7 +608,7 @@ const TIPS = {
   Corvidae:{r:2,g:'Carriquí',dist:'5–15 m',vel:'1/1000 s',ap:'f/4',tip:'Bandadas ruidosas y curiosas que se acercan solas.',eq:'Alcanzables con paciencia.'},
   Tinamidae:{r:3,g:'Tinamú',dist:'5–15 m',vel:'1/500 s',ap:'f/2',tip:'Caminan por el suelo del bosque oscuro; se oyen más de lo que se ven.',eq:'Difícil.'},
   Odontophoridae:{r:3,g:'Perdiz',dist:'5–15 m',vel:'1/500 s',ap:'f/2.8',tip:'Grupos tímidos en el suelo. Espera en silencio en bordes de bosque.',eq:'Difícil.'},
-  Apodidae:{r:3,g:'Vencejo',dist:'—',vel:'1/4000 s',ap:'f/5.6',tip:'Casi nunca se posan. Practica paneo con zona amplia de AF.',eq:'Muy difícil con cualquier equipo.'}
+  Apodidae:{r:3,t:3,g:'Vencejo',dist:'—',vel:'1/4000 s',ap:'f/5.6',tip:'Casi nunca se posan. Practica paneo con zona amplia de AF.',eq:'Muy difícil con cualquier equipo.'}
 };
 const GENERIC = {g:'Ave',dist:'5–15 m',vel:'1/1600 s',ap:'f/4–f/5.6',tip:'Llega antes del amanecer, quédate quieto y deja que el ave se acostumbre a ti. Enfoca al ojo y dispara en ráfaga.',eq:'Si a 50mm el ave ocupa menos de un tercio del encuadre, el recorte no vale la pena.'};
 let famById = {}, famList = [];
@@ -546,8 +617,24 @@ function famOf(it){
   const id = (it.anc || []).find(a => famById[a]);
   it.f = id || null; return it.f;
 }
-function reachOf(it){ const f = famOf(it); if(!f) return 0; const t = TIPS[famById[f].name]; return t ? t.r : 0; }
-const tipsFor = n => TIPS[n] || GENERIC;
+function famReach(name){
+  if(state.group !== 'aves') return GROUPS[state.group].reach;
+  const t = TIPS[name]; if(!t) return null;
+  const r = t.r, n = NOCT.has(name);
+  return {tamron: t.t ?? (n ? r : Math.max(1, r - 1)), prime: r, kit: n ? Math.min(3, r + 1) : r};
+}
+function bestLens(name){
+  const fr = famReach(name); if(!fr) return null;
+  const order = NOCT.has(name) ? ['prime','tamron','kit'] : ['tamron','prime','kit'];
+  return order.reduce((b, k) => fr[k] < fr[b] ? k : b, order[0]);
+}
+function reachFor(name, lens = state.lens){
+  const fr = famReach(name); if(!fr) return 0;
+  return lens === 'all' ? Math.min(fr.tamron, fr.prime, fr.kit) : fr[lens];
+}
+function famNameOf(it){ const f = famOf(it); return f ? famById[f].name : null; }
+function reachOf(it){ return reachFor(state.group === 'aves' ? famNameOf(it) : null); }
+const tipsFor = n => state.group === 'aves' ? (TIPS[n] || GENERIC) : GROUPS[state.group].tips;
 
 /* ---------- Capas con historial (botón atrás del celular) ---------- */
 const layers = [];
@@ -557,11 +644,18 @@ function pushLayer(name, onClose, hash){
 }
 function topLayer(){ return layers[layers.length - 1]; }
 function closeTop(){ if(!layers.length) return; history.back(); }
-window.addEventListener('popstate', () => { const l = layers.pop(); if(l) l.onClose(); });
+let ignorePop = 0;
+window.addEventListener('popstate', () => { if(ignorePop){ ignorePop = 0; return; } const l = layers.pop(); if(l) l.onClose(); });
+function closeAll(){
+  const n = layers.length; if(!n) return;
+  while(layers.length) layers.pop().onClose();
+  hideSheet(); hidePicker();
+  ignorePop = 1; history.go(-n);
+}
 
 /* ---------- Carga de especies ---------- */
 function baseParams(){
-  return {...placeParams(), taxon_id: state.family || AVES, quality_grade:'research',
+  return {...placeParams(), taxon_id: state.family || groupId(), quality_grade:'research',
     month: state.month, endemic: state.endemic ? 'true' : '', threatened: state.threatened ? 'true' : '',
     locale:'es', preferred_place_id: COLOMBIA};
 }
@@ -614,13 +708,17 @@ function skeleton(){ $('grid').innerHTML = Array.from({length:12}, () => '<div c
 function renderChips(){
   const fam = state.family && famById[state.family];
   const chips = [
+    {k:'group', icon: GROUPS[state.group].icon, label: GROUPS[state.group].label, on: state.group !== 'aves', menu:true},
     {k:'place', icon: state.place.lat ? 'locate-fixed' : 'map-pin', label: state.place.lat ? 'Cerca de mí' : state.place.name, on: !(state.place.id === COLOMBIA && !state.place.lat), menu:true},
     {k:'month', icon:'calendar-days', label: state.month ? MONTHS_FULL[state.month - 1] : 'Mes', on: !!state.month, menu:true},
-    {k:'reach', icon:'aperture', label: state.reach ? REACH[state.reach] + ' con mi equipo' : 'Alcance', on: !!state.reach, menu:true},
+    {k:'lens', icon:'aperture', label: state.lens === 'all' ? 'Mi equipo' : LENSES[state.lens].short, on: state.lens !== 'all', menu:true},
+    {k:'reach', icon:'target', label: state.reach ? REACH[state.reach] : 'Alcance', on: !!state.reach, menu:true},
     {k:'family', icon:'feather', label: fam ? (fam.common || fam.name) : 'Familia', on: !!state.family, menu:true},
+    ...(state.group === 'aves' ? [{k:'migr', icon:'plane-landing', label:'Migratorias', on: state.migr}] : []),
     {k:'endemic', icon:'star', label:'Endémicas', on: state.endemic},
     {k:'threat', icon:'shield-alert', label:'Amenazadas', on: state.threatened},
-    {k:'sort', icon:'arrow-up-down', label: SORTS[state.sort], on:false, menu:true}
+    {k:'sort', icon:'arrow-up-down', label: SORTS[state.sort], on:false, menu:true},
+    {k:'random', icon:'shuffle', label:'Al azar', on:false}
   ];
   $('chips').innerHTML = chips.map(c => `<button type="button" class="chip${c.on ? ' on' : ''}" data-chip="${c.k}" ${c.menu ? 'aria-haspopup="dialog"' : `aria-pressed="${c.on}"`}>${ic(c.icon)}<span>${esc(c.label)}</span>${c.menu ? ic('chevron-down', 'chev') : ''}</button>`).join('');
 }
@@ -629,6 +727,15 @@ $('chips').addEventListener('click', e => {
   const k = b.dataset.chip;
   if(k === 'endemic'){ state.endemic = !state.endemic; vibrate(); loadSpecies(); }
   else if(k === 'threat'){ state.threatened = !state.threatened; vibrate(); loadSpecies(); }
+  else if(k === 'migr'){
+    state.migr = !state.migr; vibrate();
+    if(!state.migr){ render(); return; }
+    renderChips(); $('statusText').innerHTML = 'Calculando migratorias<span class="loading-dots"></span>';
+    ensureMigr().then(ok => { if(!ok){ state.migr = false; toast('No pude calcular las migratorias', 'wifi-off'); } render(); });
+  }
+  else if(k === 'random') act('random');
+  else if(k === 'group') pickGroup();
+  else if(k === 'lens') pickLens();
   else if(k === 'place') pickPlace();
   else if(k === 'month') pickMonth();
   else if(k === 'reach') pickReach();
@@ -662,12 +769,29 @@ function fillList(opts, selected, onPick){
   $('pList').querySelectorAll('.opt').forEach(b => b.onclick = () => { vibrate(); const o = opts.find(x => String(x.v) === b.dataset.v); closePicker(); onPick(o); });
 }
 
+function pickLens(){
+  openPicker('¿Qué lente llevas?');
+  fillList(Object.entries(LENSES).map(([v, l]) => ({v, label:l.label, sub:l.sub, icon: v === 'all' ? 'camera' : 'aperture'})), state.lens, o => setLens(o.v));
+}
+function setLens(v){
+  state.lens = v; savePrefs(); render();
+  if(sheetMode === 'plan'){ renderPlanForm(); buildPlan(); }
+}
+function pickGroup(){
+  openPicker('Qué quieres fotografiar');
+  fillList(Object.entries(GROUPS).map(([v, g]) => ({v, label:g.label, sub:g.sub, icon:g.icon})), state.group, o => setGroup(o.v));
+}
+function setGroup(g){
+  state.group = g; state.family = ''; state.migr = false; state.reach = '';
+  $('heroGroup').textContent = GROUPS[g].noun; $('q').placeholder = GROUPS[g].ph;
+  savePrefs(); loadFamilies(); loadSpecies();
+}
 function pickSort(){
   openPicker('Ordenar');
   fillList(Object.entries(SORTS).map(([v, label]) => ({v, label, icon: v === 'rare' ? 'sparkles' : v === 'az' ? 'list' : 'trophy'})), state.sort, o => { state.sort = o.v; renderChips(); render(); });
 }
 function pickReach(){
-  openPicker('Alcance con tu equipo');
+  openPicker('Alcance · ' + LENSES[state.lens].label);
   const opts = [{v:'', label:'Cualquier alcance', icon:'aperture'}].concat([1, 2, 3].map(r => ({v:String(r), label:REACH[r], sub:REACH_DESC[r], dot:`var(--${r === 1 ? 'ok' : r === 2 ? 'mid' : 'danger'})`})));
   fillList(opts, state.reach, o => { state.reach = o.v; renderChips(); render(); });
   if(!famList.length) $('pList').insertAdjacentHTML('beforeend', '<p class="note" style="padding:0 12px">Cargando familias para calcular el alcance…</p>');
@@ -680,7 +804,7 @@ function pickMonth(){
 }
 function pickFamily(){
   const base = () => [{v:'', label:'Todas las familias', icon:'bird'}].concat(famList.map(f => {
-    const r = TIPS[f.name] ? TIPS[f.name].r : 0;
+    const r = state.group === 'aves' ? reachFor(f.name) : 0;
     return {v:String(f.id), label:f.common || f.name, sub:f.name + (r ? ' · ' + REACH[r] : ''), dot: r ? `var(--${r === 1 ? 'ok' : r === 2 ? 'mid' : 'danger'})` : null, icon:'feather'};
   }));
   const pick = o => { state.family = o.v; loadSpecies(); };
@@ -733,6 +857,8 @@ function nearMe(){
 function setPlace(pl){
   state.place = pl; state.family = '';
   savePrefs(); loadFamilies(); loadSpecies();
+  if(state.migr) ensureMigr().then(() => render());
+  if(sheetMode === 'plan'){ renderPlanForm(); buildPlan(); }
 }
 
 /* ---------- Render ---------- */
@@ -743,6 +869,7 @@ function applyFilters(){
     if(state.mine === 'done' && !has(it.id)) return false;
     if(state.mine === 'todo' && has(it.id)) return false;
     if(state.reach && String(reachOf(it)) !== state.reach) return false;
+    if(state.migr && !(migrSet && migrSet.has(it.id))) return false;
     return true;
   });
   if(state.sort === 'obs') list.sort((a, b) => b.c - a.c);
@@ -787,6 +914,7 @@ function card(it){
   if(it.en) b.push(`<span class="badge">${ic('star')}ENDÉMICA</span>`);
   if(['VU','EN','CR'].includes(it.cs)) b.push(`<span class="badge risk">${ic('shield-alert')}${esc(it.cs)}</span>`);
   else if(it.th) b.push(`<span class="badge risk">${ic('shield-alert')}AMENAZA</span>`);
+  if(state.group === 'aves' && migrSet && migrSet.has(it.id)) b.push(`<span class="badge">${ic('plane-landing')}MIGRATORIA</span>`);
   const r = reachOf(it);
   return `<div class="card" role="button" tabindex="0" data-id="${it.id}">
     <div class="ph">${it.p ? `<img loading="lazy" decoding="async" src="${esc(it.p)}" alt="${esc(it.n || it.s)}">` : ''}</div>
@@ -832,16 +960,22 @@ function renderDaily(){
 
 /* ---------- Hoja: ficha, identificar, mi lista ---------- */
 let current = null, sheetMode = '';
-function showSheet(hash){
+function showSheet(hash, backTo){
   if(topLayer() && topLayer().name === 'sheet'){
-    try{ history.replaceState({layer:'sheet'}, '', hash || location.pathname + location.search); }catch(e){}
+    if(backTo) pushLayer('sheet', () => restoreMode(backTo), hash);
+    else { try{ history.replaceState({layer:'sheet'}, '', hash || location.pathname + location.search); }catch(e){} }
   } else {
     $('sheet').classList.add('on'); $('scrim').classList.add('on');
     document.body.style.overflow = 'hidden';
     pushLayer('sheet', hideSheet, hash);
   }
   $('sheetScroll').scrollTop = 0;
-  setNav(sheetMode === 'identify' ? 'identify' : sheetMode === 'account' ? 'account' : 'explore');
+  navFor();
+}
+function navFor(){ setNav({identify:'identify', account:'account', plan:'plan', quiz:'quiz', quizEnd:'quiz'}[sheetMode] || 'explore'); }
+function restoreMode(m){
+  if(m === 'plan') planView(); else if(m === 'account') accountView(); else if(m === 'quizEnd') quizEndView();
+  $('sheetScroll').scrollTop = 0; navFor();
 }
 function hideSheet(){
   current = null; sheetMode = '';
@@ -864,6 +998,7 @@ function sheetChrome(title, actions, share){
 function setNav(k){ document.querySelectorAll('.bnav [data-act]').forEach(b => b.classList.toggle('on', b.dataset.act === k)); }
 
 function openSheet(it, keepPhoto){
+  const back = ['plan','account','quizEnd'].includes(sheetMode) && topLayer() && topLayer().name === 'sheet' ? sheetMode : null;
   current = it; sheetMode = 'species';
   if(!keepPhoto) clearUpload();
   sheetChrome(it.n || it.s, true, true);
@@ -878,6 +1013,7 @@ function openSheet(it, keepPhoto){
     </div>
     <div id="settingsWrap"><h3 class="sec">${ic('camera')}Cómo fotografiarla</h3><p class="note">Cargando<span class="loading-dots"></span></p></div>
     <div id="validator">${validatorHTML(it)}</div>
+    <div id="soundWrap"><h3 class="sec">${ic('volume-2')}Canto y sonidos</h3><p class="note">Buscando grabaciones<span class="loading-dots"></span></p></div>
     <div><h3 class="sec">${ic('calendar-days')}Cuándo se observa</h3><div id="hist" class="hist"></div><p class="note">Refleja cuándo la gente la reporta, no solo cuándo está. Barra resaltada: mes con más registros; en dorado, el mes actual.</p></div>
     <div><h3 class="sec">${ic('map-pin')}Dónde la han visto</h3><ul class="places" id="places"><li>Cargando…</li></ul></div>
     <div id="wikiWrap"></div>
@@ -888,7 +1024,7 @@ function openSheet(it, keepPhoto){
       <a href="https://xeno-canto.org/explore?query=${encodeURIComponent(it.s)}" target="_blank" rel="noopener">${ic('music')}Canto${ic('external-link', 'ext')}</a>
       <a href="https://ebird.org/search?q=${encodeURIComponent(it.s)}" target="_blank" rel="noopener">${ic('bird')}eBird${ic('external-link', 'ext')}</a>
     </div></div>`;
-  showSheet('#sp-' + it.id);
+  showSheet('#sp-' + it.id, back);
   bindValidator();
   loadDetail(it);
 }
@@ -929,10 +1065,19 @@ async function loadDetail(it){
     if(photos.length){
       $('gal').innerHTML = photos.map(p => { const cap = esc(p.attribution || ''); return `<figure><img loading="lazy" src="${esc(p.large_url || large(p.medium_url || p.url))}" alt="" data-cap="${cap}"><figcaption>${cap}</figcaption></figure>`; }).join('');
     }
-    renderTips(tipsFor(fam && fam.name));
+    renderTips(tipsFor(fam && fam.name), fam && fam.name);
     const summary = t.wikipedia_summary ? new DOMParser().parseFromString(t.wikipedia_summary, 'text/html').body.textContent : '';
     if(summary) $('wikiWrap').innerHTML = `<h3 class="sec">${ic('feather')}Sobre la especie</h3><p class="wiki">${esc(summary)}</p>${t.wikipedia_url ? `<p class="note"><a href="${esc(t.wikipedia_url)}" target="_blank" rel="noopener">Leer más en Wikipedia</a></p>` : ''}`;
-  }).catch(() => { if(current && current.id === id) renderTips(GENERIC); });
+  }).catch(() => { if(current && current.id === id) renderTips(tipsFor(null), null); });
+
+  api('/observations', {taxon_id:id, sounds:'true', quality_grade:'research', per_page:10, order_by:'votes'}).then(d => {
+    if(!current || current.id !== id || !$('soundWrap')) return;
+    const snd = [];
+    (d.results || []).forEach(o => (o.sounds || []).forEach(x => { if(x.file_url && snd.length < 3) snd.push({url:x.file_url, by:x.attribution || '', where:o.place_guess || ''}); }));
+    $('soundWrap').innerHTML = `<h3 class="sec">${ic('volume-2')}Canto y sonidos</h3>` + (snd.length
+      ? `<div class="rows">${snd.map(x => `<div class="sound"><audio controls preload="none" src="${esc(x.url)}"></audio><small>${esc(x.where)}${x.where && x.by ? ' · ' : ''}${esc(x.by)}</small></div>`).join('')}</div><p class="note">Escúchalo antes de salir: casi siempre oirás el ave antes de verla.</p>`
+      : `<p class="note">No hay grabaciones en iNaturalist.${state.group === 'aves' ? ' Prueba en xeno-canto, en los enlaces de abajo.' : ''}</p>`);
+  }).catch(() => { if($('soundWrap')) $('soundWrap').innerHTML = ''; });
 
   api('/observations/histogram', {taxon_id:id, ...pp, date_field:'observed', interval:'month_of_year', quality_grade:'research'}).then(d => {
     if(!current || current.id !== id) return;
@@ -955,18 +1100,23 @@ async function loadDetail(it){
     $('places').innerHTML = top.length ? top.map(([k, v]) => `<li>${ic('map-pin')}<span>${esc(k)}</span><span>${v}</span></li>`).join('') : '<li>Sin localidades públicas.</li>';
   }).catch(() => { if($('places')) $('places').innerHTML = '<li>No se pudieron cargar.</li>'; });
 }
-function renderTips(t){
+function renderTips(t, famName){
   if(!$('settingsWrap')) return;
+  const use = state.lens === 'all' ? (bestLens(famName) || 'tamron') : state.lens;
+  const r = reachFor(famName, use);
+  const eq = use === 'tamron' && state.group === 'aves' ? (TAMRON_EQ[r] || t.eq) : t.eq;
+  const ap = use === 'tamron' ? 'f/6.3 a 300mm' : use === 'kit' ? 'f/5.6 a 50mm' : t.ap;
   $('settingsWrap').innerHTML = `
     <h3 class="sec">${ic('camera')}Cómo fotografiarla · ${esc(t.g)}</h3>
+    <div class="lensline"><span class="badge">${ic('aperture')}${state.lens === 'all' ? 'Mejor lente: ' : ''}${esc(LENSES[use].label)}</span>${r ? `<span class="reach r${r}">${REACH[r]}</span>` : ''}</div>
     <div class="settings">
       <div class="set">${ic('ruler')}<small>Distancia</small><b>${esc(t.dist)}</b></div>
       <div class="set">${ic('timer')}<small>Velocidad</small><b>${esc(t.vel)}</b></div>
-      <div class="set">${ic('aperture')}<small>Apertura</small><b>${esc(t.ap)}</b></div>
-      <div class="set">${ic('crosshair')}<small>a6700</small><b>M · ISO auto · AF-C · Ave</b></div>
+      <div class="set">${ic('aperture')}<small>Apertura</small><b>${esc(ap)}</b></div>
+      <div class="set">${ic('crosshair')}<small>a6700</small><b>M · ISO auto · AF-C · ${GROUPS[state.group].af}</b></div>
     </div>
-    <div class="tipbox"><p>${esc(t.tip)}</p><p><b>Con tu equipo:</b> ${esc(t.eq)}</p></div>
-    <p class="note">${esc(GEAR)}</p>`;
+    <div class="tipbox"><p>${esc(t.tip)}</p><p><b>Con tu equipo:</b> ${esc(eq)}</p></div>
+    <p class="note">${esc(GEAR[use])}</p>`;
 }
 
 /* ---------- Validación de fotos (iNaturalist Vision) ---------- */
@@ -997,7 +1147,7 @@ function validatorHTML(it){
   return `<h3 class="sec">${ic('image-up')}${it ? 'Validar mi foto' : 'Identificar una foto'}</h3>
     <label class="drop" for="vFile" id="vDrop">
       ${ic('camera')}
-      <b>${it ? 'Sube tu foto de esta ave' : 'Sube la foto del ave'}</b>
+      <b>${it ? 'Sube tu foto de esta especie' : 'Sube la foto'}</b>
       <span class="note" style="margin:0">Desde la cámara o la galería. Si tiene GPS y fecha, se usan para afinar el resultado.</span>
       <input id="vFile" type="file" accept="image/*">
     </label>
@@ -1183,7 +1333,8 @@ function openIdentify(){
 }
 
 /* ---------- Mi lista ---------- */
-function openAccount(){
+function openAccount(){ accountView(); showSheet('#mi-lista'); }
+function accountView(){
   current = null; sheetMode = 'account';
   sheetChrome('Mi lista', false, false);
   const total = new Set([...life, ...inatSet]);
@@ -1218,7 +1369,6 @@ function openAccount(){
       <textarea class="area" id="impText" placeholder="Pega aquí el código de tu lista" aria-label="Código de lista para importar"></textarea>
       <button class="btn" id="imp" type="button">${ic('clipboard-paste')}Importar</button>
     </div>`;
-  showSheet('#mi-lista');
   $('inatSync').onclick = () => syncInat($('inatUser').value.trim().replace(/^@/, ''), true);
   $('inatUser').onkeydown = e => { if(e.key === 'Enter') $('inatSync').click(); };
   $('exp').onclick = async () => {
@@ -1231,7 +1381,7 @@ function openAccount(){
     if(!ids.length){ toast('No encontré especies en ese texto', 'triangle-alert'); return; }
     const before = life.size; ids.forEach(id => life.add(id)); saveLife();
     toast(`${fmt(life.size - before)} especies nuevas importadas`, 'circle-check');
-    render(); openAccount();
+    render(); accountView();
   };
 }
 async function syncInat(user, verbose){
@@ -1242,7 +1392,7 @@ async function syncInat(user, verbose){
     const ids = [];
     let page = 1, pages = 1;
     do{
-      const d = await api('/observations/species_counts', {user_login:user, taxon_id:AVES, per_page:500, page, _:Date.now()});
+      const d = await api('/observations/species_counts', {user_login:user, per_page:500, page, _:Date.now()});
       pages = Math.min(Math.ceil((d.total_results || 0) / 500), 10);
       (d.results || []).forEach(r => r.taxon && ids.push(r.taxon.id));
       page++;
@@ -1257,11 +1407,253 @@ async function syncInat(user, verbose){
   }
 }
 
+/* ---------- Migratorias boreales (estimado por estacionalidad) ---------- */
+let migrSet = null, migrKey = '';
+async function ensureMigr(){
+  const key = JSON.stringify(placeParams());
+  if(migrSet && migrKey === key) return true;
+  const ck = 'aves-co-migr:' + key, c = lsGet(ck, null);
+  if(c && Date.now() - c.t < 7 * 864e5){ migrSet = new Set(c.ids); migrKey = key; return true; }
+  try{
+    const counts = async months => {
+      const out = {}; let page = 1, pages = 1;
+      do{
+        const d = await api('/observations/species_counts', {...placeParams(), taxon_id:3, quality_grade:'research', month:months, per_page:500, page});
+        pages = Math.min(Math.ceil((d.total_results || 0) / 500), 6);
+        (d.results || []).forEach(r => { if(r.taxon) out[r.taxon.id] = r.count; });
+        page++;
+      } while(page <= pages);
+      return out;
+    };
+    const win = await counts('11,12,1,2,3');
+    const sum = await counts('5,6,7');
+    const ids = Object.keys(win).filter(id => win[id] >= 6 && (sum[id] || 0) <= win[id] * 0.04).map(Number);
+    migrSet = new Set(ids); migrKey = key;
+    lsSet(ck, {t:Date.now(), ids});
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ---------- Sol: amanecer y atardecer (ecuación de salida del sol) ---------- */
+function sunTimes(date, lat, lng){
+  const rad = Math.PI / 180;
+  const jdNoon = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12) / 864e5 + 2440587.5;
+  const n = Math.round(jdNoon - 2451545);
+  const Js = n - lng / 360;
+  const M = (357.5291 + 0.98560028 * Js) % 360;
+  const C = 1.9148 * Math.sin(M * rad) + 0.02 * Math.sin(2 * M * rad) + 0.0003 * Math.sin(3 * M * rad);
+  const L = (M + C + 180 + 102.9372) % 360;
+  const Jt = 2451545 + Js + 0.0053 * Math.sin(M * rad) - 0.0069 * Math.sin(2 * L * rad);
+  const dec = Math.asin(Math.sin(L * rad) * Math.sin(23.4397 * rad));
+  const cosW = (Math.sin(-0.833 * rad) - Math.sin(lat * rad) * Math.sin(dec)) / (Math.cos(lat * rad) * Math.cos(dec));
+  const w = Math.acos(Math.max(-1, Math.min(1, cosW))) / rad;
+  const toDate = J => new Date((J - 2440587.5) * 864e5);
+  return {rise: toDate(Jt - w / 360), set: toDate(Jt + w / 360)};
+}
+
+/* ---------- Filas reutilizables ---------- */
+function trow(it){
+  const r = reachOf(it);
+  return `<div class="trow" data-open="${it.id}" role="button" tabindex="0">${it.p ? `<img loading="lazy" src="${esc(it.p)}" alt="">` : '<img alt="">'}<span class="t"><span>${esc(it.n || it.s)}</span><small><span>${ic('eye', 'sm')} ${fmt(it.c)}</span>${r ? `<span class="reach r${r}">${REACH[r]}</span>` : ''}</small></span>${tickHTML(it.id)}</div>`;
+}
+let extraItems = [];
+$('sheetBody').addEventListener('click', e => {
+  const t = e.target.closest('.trow [data-tick]');
+  if(t){ e.stopPropagation(); toggleLife(+t.dataset.tick); return; }
+  const sp = e.target.closest('[data-spot]');
+  if(sp){ vibrate(); setPlace({id:+sp.dataset.spot, name:sp.dataset.name, loc:parseLoc(sp.dataset.loc)}); $('sheetScroll').scrollTop = 0; toast('Plan para ' + sp.dataset.name, 'map-pin'); return; }
+  const o = e.target.closest('[data-open]');
+  if(!o) return;
+  const id = +o.dataset.open;
+  const it = state.items.find(x => x.id === id) || extraItems.find(x => x.id === id) || (quiz && quiz.pool.find(x => x.id === id));
+  if(it) openSheet(it);
+});
+$('sheetBody').addEventListener('keydown', e => {
+  if((e.key === 'Enter' || e.key === ' ') && e.target.matches('.trow')){ e.preventDefault(); e.target.click(); }
+});
+
+/* ---------- Plan de salida ---------- */
+let planDate = '', planId = 0;
+function placeCenter(){ const p = state.place; if(p.lat) return [p.lat, p.lng]; if(p.loc) return p.loc; return null; }
+function placeLabel(){ return state.place.lat ? 'Cerca de mí' : state.place.name; }
+function openPlan(){ planView(); showSheet('#plan'); }
+function planView(){
+  current = null; sheetMode = 'plan';
+  sheetChrome('Plan de salida', false, false);
+  if(!planDate){ const d = new Date(); d.setDate(d.getDate() + 1); planDate = localISO(d); }
+  $('sheetBody').innerHTML = `<div id="planForm" style="padding-top:18px"></div><div id="planOut" style="display:flex;flex-direction:column;gap:26px"></div>`;
+  renderPlanForm(); buildPlan();
+}
+function renderPlanForm(){
+  if(!$('planForm')) return;
+  $('planForm').innerHTML = `<div class="panel">
+    <div class="field-grid">
+      <div><span class="lbl">Lugar</span><button type="button" class="btn pickbtn" id="planPlace">${ic(state.place.lat ? 'locate-fixed' : 'map-pin')}<span>${esc(placeLabel())}</span>${ic('chevron-down', 'chev')}</button></div>
+      <div><label class="lbl" for="planDateIn">Fecha</label><label class="input">${ic('calendar-days')}<input id="planDateIn" type="date" value="${planDate}"></label></div>
+    </div>
+    <div><span class="lbl">Lente</span><div class="seg wide" role="group" aria-label="Lente">${Object.entries(LENSES).map(([k, l]) => `<button type="button" data-plens="${k}" aria-pressed="${state.lens === k}">${esc(l.short)}</button>`).join('')}</div></div>
+  </div>`;
+  $('planPlace').onclick = pickPlace;
+  $('planDateIn').onchange = e => { if(e.target.value){ planDate = e.target.value; buildPlan(); } };
+  $('planForm').querySelectorAll('[data-plens]').forEach(b => b.onclick = () => { vibrate(); setLens(b.dataset.plens); });
+}
+async function buildPlan(){
+  const out = $('planOut'); if(!out) return;
+  const my = ++planId;
+  const [y, m, d] = planDate.split('-').map(Number);
+  const day = new Date(y, m - 1, d);
+  const center = placeCenter();
+  const c = center || [4.6, -74.08];
+  const sun = sunTimes(day, c[0], c[1]);
+  const dateLabel = day.toLocaleDateString('es-CO', {weekday:'long', day:'numeric', month:'long'});
+  const monthName = MONTHS_FULL[m - 1].toLowerCase();
+  out.innerHTML = `
+    <div><h3 class="sec">${ic('sunrise')}Luz · ${esc(dateLabel)}</h3>
+      <div class="lightrow">
+        <div class="set">${ic('sunrise')}<small>Amanecer</small><b>${fmtTime(sun.rise)}</b></div>
+        <div class="set">${ic('bird')}<small>Más actividad</small><b>${fmtTime(addMin(sun.rise, -20))} – ${fmtTime(addMin(sun.rise, 180))}</b></div>
+        <div class="set">${ic('sunset')}<small>Hora dorada</small><b>${fmtTime(addMin(sun.set, -60))} – ${fmtTime(sun.set)}</b></div>
+      </div>
+      <p class="note">Llega 30 minutos antes del amanecer para estar listo cuando empieza la actividad. Al mediodía la luz es dura y la fauna se esconde: buen momento para moverte de sitio.${center ? '' : ' Horarios calculados para el centro del país; elige un lugar para precisarlos.'}</p>
+    </div>
+    <div id="planTargets"><h3 class="sec">${ic('target')}Objetivos</h3><p class="note">Buscando especies de ${monthName}<span class="loading-dots"></span></p></div>
+    <div id="planSpots"><h3 class="sec">${ic('map-pinned')}Sitios con más especies cerca</h3><p class="note">${center ? 'Buscando sitios<span class="loading-dots"></span>' : 'Elige un municipio, un parque o "Cerca de mí" para ver los sitios con más especies.'}</p></div>`;
+  try{
+    const data = await api('/observations/species_counts', {...placeParams(), taxon_id:groupId(), quality_grade:'research', month:m, per_page:500, locale:'es', preferred_place_id:COLOMBIA});
+    if(my !== planId || !$('planTargets')) return;
+    const all = (data.results || []).map(trim);
+    extraItems = all;
+    const missing = all.filter(it => !has(it.id));
+    const reachable = missing.filter(it => reachOf(it) !== 3);
+    const targets = (reachable.length ? reachable : missing).slice(0, 15);
+    $('planTargets').innerHTML = `<h3 class="sec">${ic('target')}Objetivos · ${esc(LENSES[state.lens].label)}</h3>
+      <p style="margin:0 0 12px">${fmt(all.length)} especies registradas en ${monthName} · te faltan <b>${fmt(missing.length)}</b> · <b>${fmt(reachable.length)}</b> alcanzables con tu lente.</p>
+      ${targets.length ? `<div class="rows">${targets.map(trow).join('')}</div>` : `<p class="note">Ya tienes todas las especies registradas aquí en ${monthName}. Prueba otro lugar.</p>`}
+      ${targets.length ? `<button class="btn" id="planCopy" type="button" style="margin-top:12px">${ic('copy')}Copiar plan</button>` : ''}`;
+    if($('planCopy')) $('planCopy').onclick = async () => {
+      const txt = `Salida · ${dateLabel}\n${placeLabel()} · ${LENSES[state.lens].label}\nAmanecer ${fmtTime(sun.rise)} · actividad hasta ${fmtTime(addMin(sun.rise, 180))} · hora dorada ${fmtTime(addMin(sun.set, -60))}–${fmtTime(sun.set)}\n\nObjetivos:\n` + targets.map((it, i) => `${i + 1}. ${it.n || it.s} (${it.s})`).join('\n');
+      try{ await navigator.clipboard.writeText(txt); toast('Plan copiado', 'copy'); }catch(e){ toast('No pude copiar el plan', 'triangle-alert'); }
+    };
+  }catch(e){
+    if(my === planId && $('planTargets')) $('planTargets').innerHTML = `<h3 class="sec">${ic('target')}Objetivos</h3><p class="note">No pude cargar las especies. Revisa tu conexión.</p>`;
+  }
+  if(center) loadSpots(my, center);
+}
+async function loadSpots(my, c){
+  const el = () => (my === planId ? $('planSpots') : null);
+  const head = `<h3 class="sec">${ic('map-pinned')}Sitios con más especies cerca</h3>`;
+  try{
+    const dd = 0.35;
+    const d = await api('/places/nearby', {nelat:c[0] + dd, nelng:c[1] + dd, swlat:c[0] - dd, swlng:c[1] - dd, per_page:50});
+    if(!el()) return;
+    const r = d.results || {}, seen = new Set();
+    const cands = [...(r.community || []), ...(r.standard || [])].filter(p => {
+      if(!p || !p.id || !p.name || seen.has(p.id) || p.id === state.place.id) return false;
+      if(p.admin_level === 0 || p.admin_level === 10) return false;
+      if(p.bbox_area != null && p.bbox_area > 0.2) return false;
+      seen.add(p.id); return true;
+    }).slice(0, 8);
+    if(!cands.length){ el().innerHTML = head + '<p class="note">No encontré sitios registrados en iNaturalist cerca de aquí.</p>'; return; }
+    const rows = cands.map(p => ({id:p.id, name:p.name, loc:p.location || '', n:null}));
+    const draw = () => {
+      if(!el()) return;
+      const sorted = rows.slice().sort((a, b) => (b.n ?? -1) - (a.n ?? -1));
+      el().innerHTML = head + `<div class="rows">${sorted.map(p => `<button type="button" class="trow" data-spot="${p.id}" data-name="${esc(p.name)}" data-loc="${esc(p.loc)}"><span class="lead">${ic('map-pin')}</span><span class="t"><span>${esc(p.name)}</span><small>Toca para planear aquí</small></span><span class="num">${p.n == null ? '…' : fmt(p.n)}<small>especies</small></span></button>`).join('')}</div><p class="note">Especies registradas en iNaturalist en cada sitio, de todos los meses.</p>`;
+    };
+    draw();
+    for(const p of rows){
+      try{
+        const x = await api('/observations/species_counts', {place_id:p.id, taxon_id:groupId(), quality_grade:'research', per_page:1});
+        p.n = x.total_results || 0;
+      }catch(e){ p.n = 0; }
+      if(!el()) return;
+      draw();
+    }
+  }catch(e){ if(el()) el().innerHTML = head + '<p class="note">No pude cargar los sitios cercanos.</p>'; }
+}
+
+/* ---------- Quiz de identificación ---------- */
+let quiz = null;
+function openQuiz(){ quizStart(); showSheet('#quiz'); }
+function quizPool(){
+  const base = state.filtered.length >= 8 ? state.filtered : state.items;
+  return base.filter(it => it.p).slice().sort((a, b) => b.c - a.c).slice(0, 120);
+}
+function quizStart(){
+  current = null; sheetMode = 'quiz';
+  sheetChrome('Quiz de identificación', false, false);
+  navFor();
+  const pool = quizPool();
+  if(pool.length < 4){
+    $('sheetBody').innerHTML = `<div class="empty">${ic('telescope')}<h3>Faltan especies</h3><p>Elige un lugar con más especies o quita filtros para jugar.</p></div>`;
+    return;
+  }
+  quiz = {pool, rounds: shuffle(pool.slice()).slice(0, Math.min(10, pool.length)), i:0, score:0, missed:[], answered:false};
+  quizRound();
+}
+function quizPhoto(it){
+  const fetchAlt = api('/observations', {taxon_id:it.id, photos:'true', quality_grade:'research', per_page:20})
+    .then(d => { const ph = shuffle((d.results || []).flatMap(o => (o.photos || []).slice(0, 1))); return ph.length ? {url:large(ph[0].url), cap:ph[0].attribution || ''} : null; })
+    .catch(() => null);
+  const timeout = new Promise(res => setTimeout(() => res(null), 2500));
+  return Promise.race([fetchAlt, timeout]).then(p => p || {url:large(it.p), cap:it.a || ''});
+}
+function quizRound(){
+  const q = quiz, it = q.rounds[q.i];
+  q.answered = false;
+  const fam = famOf(it);
+  const same = shuffle(q.pool.filter(x => x.id !== it.id && fam && famOf(x) === fam)).slice(0, 2);
+  const others = shuffle(q.pool.filter(x => x.id !== it.id && !same.includes(x)));
+  const opts = shuffle([it, ...same, ...others].slice(0, 4));
+  $('sheetBody').innerHTML = `<div style="padding-top:18px;display:flex;flex-direction:column;gap:14px">
+    <div class="qhead"><span>Pregunta ${q.i + 1} de ${q.rounds.length}</span><span>${ic('trophy', 'sm')}${q.score}</span></div>
+    <div class="qbar"><i style="width:${q.i / q.rounds.length * 100}%"></i></div>
+    <img class="quiz-photo" id="qImg" alt="¿Qué especie es?">
+    <p class="note" id="qCap" style="margin:-8px 0 0"></p>
+    <div class="qopts">${opts.map(o => `<button class="btn" type="button" data-q="${o.id}"><span>${esc(o.n || o.s)}</span><small>${esc(o.s)}</small></button>`).join('')}</div>
+    <div id="qNext"></div></div>`;
+  quizPhoto(it).then(p => {
+    if(quiz !== q || q.rounds[q.i] !== it || !$('qImg')) return;
+    $('qImg').onload = () => $('qImg').classList.add('ready');
+    $('qImg').src = p.url; $('qCap').textContent = p.cap;
+  });
+  $('sheetBody').querySelectorAll('[data-q]').forEach(b => b.onclick = () => {
+    if(q.answered) return;
+    q.answered = true;
+    const ok = +b.dataset.q === it.id;
+    if(ok) q.score++; else q.missed.push(it);
+    vibrate();
+    $('sheetBody').querySelectorAll('[data-q]').forEach(x => { if(+x.dataset.q === it.id) x.classList.add('right'); else if(x === b) x.classList.add('wrong'); });
+    const last = q.i === q.rounds.length - 1;
+    $('qNext').innerHTML = verdictHTML(ok ? 'yes' : 'no', ok ? 'circle-check' : 'circle-x', ok ? '¡Correcto!' : `Era ${esc(it.n || it.s)}`, `<i>${esc(it.s)}</i>`) +
+      `<button class="btn primary block" id="qGo" type="button" style="margin-top:10px">${last ? `${ic('trophy')}Ver resultado` : `Siguiente${ic('chevron-right')}`}</button>`;
+    $('qGo').onclick = () => { q.i++; if(q.i >= q.rounds.length) quizEndView(); else quizRound(); $('sheetScroll').scrollTop = 0; };
+    $('qGo').scrollIntoView({behavior:'smooth', block:'nearest'});
+  });
+}
+function quizEndView(){
+  current = null; sheetMode = 'quizEnd';
+  sheetChrome('Quiz de identificación', false, false);
+  const q = quiz; if(!q) return quizStart();
+  const p = Math.round(q.score / q.rounds.length * 100);
+  const msg = p >= 90 ? 'Ojo experto' : p >= 60 ? 'Buen nivel' : 'A seguir practicando';
+  $('sheetBody').innerHTML = `<div style="padding-top:18px;display:flex;flex-direction:column;gap:18px">
+    <div class="panel">
+      <h3 class="sec" style="margin:0">${ic('trophy')}Resultado</h3>
+      <div class="big">${q.score}/${q.rounds.length}<small>${msg}</small></div>
+      <p>Especies de ${esc(placeLabel())}${state.month ? ' en ' + MONTHS_FULL[state.month - 1].toLowerCase() : ''}. Cada partida usa fotos distintas de la comunidad.</p>
+      <button class="btn primary" id="qAgain" type="button">${ic('refresh-cw')}Jugar otra vez</button>
+    </div>
+    ${q.missed.length ? `<div><h3 class="sec">${ic('circle-x')}Para repasar</h3><div class="rows">${q.missed.map(trow).join('')}</div></div>` : ''}
+  </div>`;
+  $('qAgain').onclick = () => { quizStart(); $('sheetScroll').scrollTop = 0; };
+}
+
 /* ---------- Familias ---------- */
 async function loadFamilies(){
   famList = [];
   try{
-    const d = await api('/observations/species_counts', {...placeParams(), taxon_id:AVES, quality_grade:'research', hrank:'family', lrank:'family', per_page:500, locale:'es', preferred_place_id:COLOMBIA});
+    const d = await api('/observations/species_counts', {...placeParams(), taxon_id:groupId(), quality_grade:'research', hrank:'family', lrank:'family', per_page:500, locale:'es', preferred_place_id:COLOMBIA});
     const fams = (d.results || []).map(r => r.taxon).filter(t => t && t.rank === 'family');
     fams.forEach(t => { famById[t.id] = {name:t.name, common:t.preferred_common_name || ''}; });
     famList = fams.map(t => ({id:t.id, name:t.name, common:t.preferred_common_name || ''}))
@@ -1276,11 +1668,13 @@ function act(k){
   vibrate();
   if(k === 'identify') openIdentify();
   else if(k === 'account') openAccount();
+  else if(k === 'plan') openPlan();
+  else if(k === 'quiz') openQuiz();
   else if(k === 'random'){
     const pool = state.filtered.length ? state.filtered : state.items;
     if(pool.length) openSheet(pool[Math.floor(Math.random() * pool.length)]);
   } else if(k === 'explore'){
-    if(topLayer()) closeTop(); else window.scrollTo({top:0, behavior:'smooth'});
+    if(layers.length) closeAll(); else window.scrollTo({top:0, behavior:'smooth'});
   }
 }
 document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => act(b.dataset.act));
@@ -1305,6 +1699,8 @@ async function openFromHash(){
   try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
   if(h === '#identificar') return openIdentify();
   if(h === '#mi-lista') return openAccount();
+  if(h === '#plan') return openPlan();
+  if(h === '#quiz') return openQuiz();
   const m = h.match(/^#sp-(\d+)$/); if(!m) return;
   const id = +m[1];
   let it = state.items.find(x => x.id === id);
@@ -1321,6 +1717,7 @@ async function openFromHash(){
 
 /* ---------- Inicio ---------- */
 setViewBtns(); renderChips();
+$('heroGroup').textContent = GROUPS[state.group].noun; $('q').placeholder = GROUPS[state.group].ph;
 loadFamilies();
 loadSpecies().then(openFromHash);
 if(inat.user && Date.now() - inat.at > 6 * 3600e3) syncInat(inat.user, false);

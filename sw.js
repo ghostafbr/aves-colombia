@@ -1,5 +1,5 @@
 // Service worker: app instalable y uso sin señal con lo último consultado.
-const SHELL = 'aves-shell-v3';
+const SHELL = 'aves-shell-v4';
 const API_CACHE = 'aves-api-v1';
 const IMG_CACHE = 'aves-img-v1';
 const FONT_CACHE = 'aves-font-v1';
@@ -55,7 +55,7 @@ self.addEventListener('fetch', e => {
 
   if(url.hostname === 'api.inaturalist.org'){
     e.respondWith(networkFirst(req, API_CACHE, MAX_API));
-  } else if(/inaturalist-open-data\.s3\.amazonaws\.com|static\.inaturalist\.org/.test(url.hostname)){
+  } else if(req.destination === 'image' && /inaturalist-open-data\.s3\.amazonaws\.com|static\.inaturalist\.org/.test(url.hostname)){
     e.respondWith(cacheFirst(req, IMG_CACHE, MAX_IMAGES));
   } else if(/fonts\.(googleapis|gstatic)\.com/.test(url.hostname)){
     e.respondWith(cacheFirst(req, FONT_CACHE, 30));
