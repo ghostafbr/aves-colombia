@@ -1,0 +1,1332 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Guía Aves de Colombia</title>
+<meta name="description" content="Guía de campo y fotografía de aves de Colombia con datos en vivo de iNaturalist.">
+<meta name="theme-color" content="#0B7A80">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://api.inaturalist.org">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: app de campo móvil — barra superior, buscador y chips de filtro fijos, rejilla, navegación inferior; selectores y fichas suben desde abajo */
+:root{
+  --bg:#F2F4EF; --surface:#FFFFFF; --sunk:#E6EAE3; --ink:#18221F; --muted:#5B6B65; --line:#D3DAD2;
+  --accent:#0B7A80; --accent-ink:#FFFFFF; --accent-soft:#D7ECEC; --gold:#B57B00; --gold-soft:#FBEFD0;
+  --danger:#B4352B; --ok:#2E7D4F; --mid:#C98A00; --scrim:rgba(5,12,10,.55);
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:14px; --r-sm:10px; --tap:48px; color-scheme:light;
+  --gut-l:max(16px,env(safe-area-inset-left,0px)); --gut-r:max(16px,env(safe-area-inset-right,0px));
+  --nav-h:64px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1614; --surface:#17211E; --sunk:#1F2B27; --ink:#E6ECE8; --muted:#9AABA4; --line:#2C3A35;
+  --accent:#3EC1C7; --accent-ink:#06201F; --accent-soft:#163B3C; --gold:#F0B429; --gold-soft:#3A2E10;
+  --danger:#F07468; --ok:#63C38A; --mid:#F0B429; --scrim:rgba(0,0,0,.65); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1614; --surface:#17211E; --sunk:#1F2B27; --ink:#E6ECE8; --muted:#9AABA4; --line:#2C3A35;
+  --accent:#3EC1C7; --accent-ink:#06201F; --accent-soft:#163B3C; --gold:#F0B429; --gold-soft:#3A2E10;
+  --danger:#F07468; --ok:#63C38A; --mid:#F0B429; --scrim:rgba(0,0,0,.65); color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px))}
+@media (min-width:900px){body{padding-bottom:0}}
+img{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.ic{width:20px;height:20px;flex:0 0 auto;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
+.ic.sm{width:16px;height:16px}
+.ic.lg{width:24px;height:24px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Controles base */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap);padding:0 18px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);font-weight:700;font-size:15px;white-space:nowrap;transition:transform .08s,background .15s,border-color .15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.quiet{background:transparent;border-color:transparent}
+.btn.sm{min-height:38px;padding:0 12px;font-size:13px;border-radius:var(--r-sm)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5;cursor:default}
+.icon-btn{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;border:0;background:transparent;flex:0 0 auto;transition:background .15s}
+.icon-btn:hover{background:var(--sunk)}
+.icon-btn:active{transform:scale(.94)}
+.input{display:flex;align-items:center;gap:10px;min-height:var(--tap);padding:0 6px 0 14px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--surface);transition:border-color .15s,box-shadow .15s;min-width:0}
+.input:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.input .ic{color:var(--muted)}
+.input input,.input textarea{flex:1;min-width:0;border:0;background:transparent;outline:0;font-size:16px;padding:12px 0}
+.input input::placeholder{color:var(--muted)}
+.input .icon-btn{width:38px;height:38px}
+textarea.area{width:100%;min-height:96px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r);background:var(--surface);font:13px var(--mono);resize:vertical}
+textarea.area:focus{border-color:var(--accent);outline:0;box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* Barra superior */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.appbar .wrap{display:flex;align-items:center;gap:10px;padding-block:calc(env(safe-area-inset-top,0px) + 10px) 4px}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.brand .logo{width:38px;height:38px;border-radius:11px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:0 0 38px}
+.brand b{font:800 18px/1 var(--display);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.desk-actions{display:none;gap:8px}
+@media (min-width:900px){.desk-actions{display:flex}}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;padding-block:14px 16px;align-items:end}
+@media (min-width:860px){.hero{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);padding-block:24px}}
+.eyebrow{font:600 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font:800 clamp(2rem,8vw,4rem)/.95 var(--display);letter-spacing:-.03em;margin:.35em 0 .3em;text-wrap:balance}
+h1 .count{color:var(--gold);font-variant-numeric:tabular-nums}
+.lede{color:var(--muted);max-width:60ch;margin:0;font-size:15px}
+@media (max-width:600px){.lede{display:none}}
+.daily{display:flex;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px;text-align:left;width:100%;min-width:0}
+.daily img{width:84px;height:84px;object-fit:cover;border-radius:var(--r-sm);flex:0 0 84px;background:var(--sunk)}
+.daily .t{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.daily .k{display:flex;align-items:center;gap:6px;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.daily .n{font:700 18px/1.15 var(--display)}
+.daily i{color:var(--muted);font-size:13px}
+.daily > .ic{color:var(--muted);transform:rotate(-90deg)}
+
+/* Barra de búsqueda y filtros */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;flex-direction:column;gap:10px;padding-block:10px}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-inline:calc(-1 * var(--gut-l)) calc(-1 * var(--gut-r));padding-inline:var(--gut-l) var(--gut-r);scroll-padding-inline:var(--gut-l)}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-weight:700;font-size:14px;white-space:nowrap;transition:background .15s,border-color .15s}
+.chip .ic{width:17px;height:17px}
+.chip .chev{width:15px;height:15px;opacity:.6;margin-right:-4px}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--ink)}
+.chip.on .ic{color:var(--accent)}
+.chip:active{transform:scale(.96)}
+
+/* Estado */
+.status{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;padding-block:14px 12px}
+.status .txt{color:var(--muted);font-size:14px;min-width:0}
+.status .txt b{color:var(--ink)}
+.seg{display:inline-flex;background:var(--sunk);border-radius:12px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;height:36px;padding:0 12px;border-radius:9px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.progress{height:3px;background:var(--sunk);border-radius:3px;overflow:hidden;flex:1 1 100%}
+.progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.pill{display:inline-flex;align-items:center;gap:5px;background:var(--gold-soft);border-radius:999px;padding:3px 10px;font:600 12px var(--mono);color:var(--ink)}
+
+/* Rejilla */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(172px,1fr));gap:14px;padding-bottom:40px}
+@media (max-width:440px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+.card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;text-align:left;transition:transform .15s,box-shadow .15s;min-width:0}
+@media (hover:hover){.card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.12)}.card:hover .ph img{transform:scale(1.05)}}
+.card:active{transform:scale(.98)}
+.card .ph{aspect-ratio:1/1;background:var(--sunk);overflow:hidden;max-width:100%}
+.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.card .meta{padding:10px 12px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.card .cn{font:700 15px/1.2 var(--display);overflow-wrap:anywhere}
+.card .sn{font-style:italic;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.card .obs{display:flex;gap:4px 10px;flex-wrap:wrap;align-items:center;font:400 12px var(--mono);color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+.card .obs > span{display:inline-flex;align-items:center;gap:4px}
+.reach{display:inline-flex;align-items:center;gap:5px;font:600 12px var(--mono);color:var(--ink)}
+.reach::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c,var(--muted));flex:0 0 8px}
+.reach.r1{--c:var(--ok)} .reach.r2{--c:var(--mid)} .reach.r3{--c:var(--danger)}
+.badges{position:absolute;top:8px;left:8px;display:flex;gap:4px;flex-wrap:wrap;max-width:calc(100% - 60px)}
+.badge{display:inline-flex;align-items:center;gap:4px;font:600 10px/1 var(--mono);letter-spacing:.05em;padding:5px 8px;border-radius:999px;background:var(--gold-soft);color:var(--ink);border:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
+.badge .ic{width:12px;height:12px}
+.badge.risk{background:var(--danger);color:#fff;border-color:transparent}
+.tick{position:absolute;top:6px;right:6px;width:42px;height:42px;border-radius:50%;background:rgba(10,20,18,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);color:#fff;border:2px solid rgba(255,255,255,.9);display:grid;place-items:center;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.25);transition:transform .1s,background .15s}
+.tick:active{transform:scale(.9)}
+.tick .ic{width:20px;height:20px;stroke-width:2.6}
+.tick.on{background:var(--ok);border-color:var(--ok)}
+.tick.inat{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.grid.list{grid-template-columns:minmax(0,1fr);gap:8px}
+.grid.list .card{flex-direction:row;align-items:center}
+.grid.list .card .ph{width:80px;flex:0 0 80px}
+.grid.list .badges{position:static;padding-right:4px;max-width:none;order:3}
+.grid.list .card .meta{flex:1;order:2}
+.grid.list .tick{position:static;margin-right:10px;flex:0 0 42px;order:4;border-color:var(--line);background:var(--sunk);color:var(--ink);backdrop-filter:none}
+.grid.list .tick.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.grid.list .tick.inat{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.skel{aspect-ratio:3/4;border-radius:var(--r);background:linear-gradient(90deg,var(--sunk),var(--surface),var(--sunk));background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.empty{padding:48px 0;text-align:center;color:var(--muted);grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.empty .ic{width:40px;height:40px;color:var(--muted)}
+.empty h3{font:700 1.35rem var(--display);color:var(--ink);margin:0}
+.empty p{margin:0}
+
+/* Navegación inferior */
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--surface);border-top:1px solid var(--line);padding:6px var(--gut-r) calc(6px + env(safe-area-inset-bottom,0px)) var(--gut-l);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;box-shadow:0 -6px 20px rgba(0,0,0,.06)}
+@media (min-width:900px){.bnav{display:none}}
+.bnav button{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:52px;border-radius:12px;font:700 11px var(--body);color:var(--muted)}
+.bnav button .ic{width:24px;height:24px}
+.bnav button.on{color:var(--accent)}
+.bnav button.on .ic{stroke-width:2.4}
+.bnav button.cta .ic{background:var(--accent);color:var(--accent-ink);width:52px;height:34px;padding:6px 14px;border-radius:999px;box-sizing:border-box}
+.bnav button:active{background:var(--sunk)}
+
+/* Capas: scrim, ficha y selector */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:50;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+.scrim.top{z-index:65}
+.sheet{position:fixed;z-index:60;background:var(--bg);inset:0;height:100%;height:100dvh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1),visibility .3s;visibility:hidden}
+@media (min-width:900px){.sheet{inset:0 0 0 auto;width:min(680px,100vw);transform:translateX(100%);box-shadow:-20px 0 40px rgba(0,0,0,.2)}}
+.sheet.on{transform:none;visibility:visible}
+.sheet-top{flex:0 0 auto;display:flex;align-items:center;gap:4px;padding:calc(env(safe-area-inset-top,0px) + 6px) calc(var(--gut-r) - 6px) 6px calc(var(--gut-l) - 6px);border-bottom:1px solid var(--line);background:var(--bg)}
+.sheet-top .ttl{font:700 16px var(--display);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;padding-left:4px}
+.sheet-scroll{flex:1 1 auto;overflow:auto;overscroll-behavior:contain}
+.sheet-body{padding:0 var(--gut-r) 32px var(--gut-l);display:flex;flex-direction:column;gap:26px}
+.sheet-actions{flex:0 0 auto;display:flex;gap:10px;padding:10px var(--gut-r) calc(10px + env(safe-area-inset-bottom,0px)) var(--gut-l);border-top:1px solid var(--line);background:var(--surface)}
+.sheet-actions .btn{flex:1}
+
+.picker{position:fixed;z-index:70;left:0;right:0;bottom:0;max-height:84dvh;background:var(--surface);border-radius:22px 22px 0 0;display:flex;flex-direction:column;transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1),visibility .28s;visibility:hidden;box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+@media (min-width:640px){.picker{left:50%;right:auto;width:560px;transform:translate(-50%,105%)}.picker.on{transform:translate(-50%,0)!important}}
+.picker.on{transform:none;visibility:visible}
+.picker .grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:8px auto 2px}
+.picker-head{display:flex;align-items:center;gap:8px;padding:4px calc(var(--gut-r) - 4px) 8px var(--gut-l)}
+.picker-head b{font:800 20px var(--display);flex:1}
+.picker-search{padding:0 var(--gut-r) 10px var(--gut-l)}
+.picker-list{overflow:auto;overscroll-behavior:contain;padding:0 var(--gut-r) calc(16px + env(safe-area-inset-bottom,0px)) var(--gut-l);display:flex;flex-direction:column;gap:2px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;min-height:54px;padding:8px 12px;border:0;border-radius:12px;background:transparent;text-align:left}
+.opt:hover,.opt:focus-visible{background:var(--sunk)}
+.opt .lead{width:36px;height:36px;border-radius:10px;background:var(--sunk);display:grid;place-items:center;flex:0 0 36px;color:var(--accent)}
+.opt .lead .dot{width:12px;height:12px;border-radius:50%}
+.opt .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.opt .t span{font-weight:700}
+.opt .t small{color:var(--muted);font-size:13px;line-height:1.35}
+.opt .chk{color:var(--accent);visibility:hidden}
+.opt[aria-selected="true"]{background:var(--accent-soft)}
+.opt[aria-selected="true"] .chk{visibility:visible}
+.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding-top:4px}
+.mgrid button{height:56px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.mgrid button small{font:600 10px var(--mono);color:var(--gold)}
+.mgrid button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.mgrid button[aria-selected="true"] small{color:var(--accent-ink)}
+.mgrid .all{grid-column:1/-1}
+
+/* Contenido de la ficha */
+.gallery{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:calc(-1 * var(--gut-l)) calc(-1 * var(--gut-r));padding:14px var(--gut-r) 0 var(--gut-l);scrollbar-width:none}
+.gallery::-webkit-scrollbar{display:none}
+.gallery figure{flex:0 0 88%;margin:0;scroll-snap-align:center;min-width:0;position:relative}
+.gallery img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r);background:var(--sunk);cursor:zoom-in}
+.gallery figcaption{font-size:11px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
+.sheet h2{font:800 2rem/1 var(--display);letter-spacing:-.02em;margin:0;text-wrap:balance}
+.taxo{font:400 13px/1.6 var(--mono);color:var(--muted);margin-top:8px}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+h3.sec{display:flex;align-items:center;gap:8px;font:600 12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+h3.sec .ic{width:17px;height:17px}
+.wiki{margin:0;max-width:65ch}
+.settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:560px){.settings{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.set{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;min-width:0;display:flex;flex-direction:column;gap:4px}
+.set .ic{color:var(--accent);width:18px;height:18px}
+.set small{font:600 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.set b{font:600 14px/1.3 var(--mono);overflow-wrap:anywhere}
+.tipbox{background:var(--gold-soft);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.tipbox p{margin:0}
+.hist{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px;align-items:end;height:120px}
+.hist .b{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:4px}
+.hist .b i{display:block;width:100%;background:color-mix(in srgb,var(--accent) 35%,transparent);border-radius:4px 4px 0 0;min-height:2px}
+.hist .b.top i{background:var(--accent)}
+.hist .b.now span{color:var(--gold);font-weight:700}
+.hist span{font:600 11px var(--mono);color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.places{display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+.places li{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.places li .ic{color:var(--muted);width:17px;height:17px}
+.places li span:nth-child(2){flex:1;min-width:0}
+.places li span:last-child{font:600 13px var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.links a{display:flex;align-items:center;gap:8px;min-height:var(--tap);padding:0 14px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);font-weight:700;text-decoration:none;color:var(--ink)}
+.links a .ic{color:var(--accent)}
+.links a .ext{margin-left:auto;color:var(--muted);width:15px;height:15px}
+.loading-dots::after{content:"…";animation:dots 1s steps(3) infinite}
+@keyframes dots{0%{content:"."}33%{content:".."}66%{content:"..."}}
+
+/* Validador */
+.drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px dashed var(--line);border-radius:var(--r);padding:24px 16px;text-align:center;cursor:pointer;background:var(--surface);transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop .ic{width:34px;height:34px;color:var(--accent)}
+.drop b{font:700 16px var(--display)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.cmp{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cmp.one{grid-template-columns:minmax(0,1fr)}
+.cmp figure{margin:0;min-width:0}
+.cmp img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:var(--r);background:var(--sunk)}
+.cmp.one img{aspect-ratio:4/3}
+.cmp figcaption{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.exif{display:flex;gap:6px 14px;flex-wrap:wrap;font:400 12px var(--mono);color:var(--muted)}
+.exif span{display:inline-flex;align-items:center;gap:5px}
+.verdict{border-radius:var(--r);padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.verdict > .ic{width:26px;height:26px;margin-top:2px}
+.verdict .v{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+.verdict b{font:800 18px/1.2 var(--display)}
+.verdict.yes{background:color-mix(in srgb,var(--ok) 15%,var(--surface));border:1px solid var(--ok)}
+.verdict.yes > .ic{color:var(--ok)}
+.verdict.maybe{background:var(--gold-soft);border:1px solid var(--gold)}
+.verdict.maybe > .ic{color:var(--gold)}
+.verdict.no{background:color-mix(in srgb,var(--danger) 12%,var(--surface));border:1px solid var(--danger)}
+.verdict.no > .ic{color:var(--danger)}
+.sugg{display:flex;flex-direction:column;gap:6px}
+.sugg button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:6px 12px 6px 6px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.sugg button.me{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok)}
+.sugg img{width:56px;height:56px;object-fit:cover;border-radius:var(--r-sm);flex:0 0 56px;background:var(--sunk)}
+.sugg .t{flex:1;min-width:0;display:flex;flex-direction:column}
+.sugg .t span{font-weight:700}
+.sugg .t i{color:var(--muted);font-size:13px}
+.sugg .pct{font:600 14px var(--mono);font-variant-numeric:tabular-nums}
+.meter{width:56px;height:6px;border-radius:3px;background:var(--sunk);overflow:hidden;margin-top:4px}
+.meter i{display:block;height:100%;background:var(--accent)}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+details.tok summary{list-style:none;display:flex;align-items:center;gap:8px;font-weight:700;cursor:pointer;min-height:var(--tap)}
+details.tok summary::-webkit-details-marker{display:none}
+details.tok summary .chev{margin-left:auto;transition:transform .2s}
+details.tok[open] summary .chev{transform:rotate(180deg)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
+.panel p{margin:0}
+.panel .row{display:flex;gap:8px;flex-wrap:wrap}
+.panel .row .input{flex:1 1 200px}
+.big{font:800 2.6rem/1 var(--display);font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.big small{font:600 13px var(--mono);color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bars div{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr) 3.4rem;gap:10px;align-items:center;font-size:13px}
+.bars span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bars em{display:block;height:8px;border-radius:4px;background:var(--sunk);overflow:hidden}
+.bars em i{display:block;height:100%;background:var(--ok)}
+.bars span:last-child{font:600 12px var(--mono);text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* Visor y avisos */
+.lightbox{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:env(safe-area-inset-top,0px) var(--gut-r) env(safe-area-inset-bottom,0px) var(--gut-l)}
+.lightbox img{max-height:84vh;width:auto;object-fit:contain;border-radius:6px}
+.lightbox p{color:#cfd8d4;font-size:12px;margin:10px 0 0;text-align:center}
+.lightbox .icon-btn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 10px);right:calc(var(--gut-r) - 4px);color:#fff;background:rgba(255,255,255,.12)}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:999px;font-weight:700;z-index:95;max-width:calc(100% - 32px);display:flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:up .2s ease-out}
+@media (min-width:900px){.toast{bottom:24px}}
+@keyframes up{from{transform:translate(-50%,12px);opacity:0}}
+footer{padding-block:20px 32px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></symbol><symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/> <circle cx="12" cy="13" r="3"/></symbol><symbol id="i-list-checks" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/> <path d="m3 7 2 2 4-4"/> <path d="M13 6h8"/> <path d="M13 12h8"/> <path d="M13 18h8"/></symbol><symbol id="i-dices" viewBox="0 0 24 24"><rect width="12" height="12" x="2" y="10" rx="2" ry="2"/> <path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6"/> <path d="M6 18h.01"/> <path d="M10 14h.01"/> <path d="M15 6h.01"/> <path d="M18 9h.01"/></symbol><symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/> <circle cx="12" cy="10" r="3"/></symbol><symbol id="i-locate-fixed" viewBox="0 0 24 24"><line x1="2" x2="5" y1="12" y2="12"/> <line x1="19" x2="22" y1="12" y2="12"/> <line x1="12" x2="12" y1="2" y2="5"/> <line x1="12" x2="12" y1="19" y2="22"/> <circle cx="12" cy="12" r="7"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/> <path d="M19 12H5"/></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/> <circle cx="6" cy="12" r="3"/> <circle cx="18" cy="19" r="3"/> <line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/> <line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/> <path d="M12 5v14"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-image-up" viewBox="0 0 24 24"><path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/> <path d="m14 19.5 3-3 3 3"/> <path d="M17 22v-5.5"/> <circle cx="9" cy="9" r="2"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol><symbol id="i-layout-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/> <rect width="7" height="7" x="14" y="3" rx="1"/> <rect width="7" height="7" x="14" y="14" rx="1"/> <rect width="7" height="7" x="3" y="14" rx="1"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M3 12h.01"/> <path d="M3 18h.01"/> <path d="M3 6h.01"/> <path d="M8 12h13"/> <path d="M8 18h13"/> <path d="M8 6h13"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24"><path d="M8 2v4"/> <path d="M16 2v4"/> <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M3 10h18"/> <path d="M8 14h.01"/> <path d="M12 14h.01"/> <path d="M16 14h.01"/> <path d="M8 18h.01"/> <path d="M12 18h.01"/> <path d="M16 18h.01"/></symbol><symbol id="i-star" viewBox="0 0 24 24"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/> <path d="M12 9v4"/> <path d="M12 17h.01"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><line x1="21" x2="14" y1="4" y2="4"/> <line x1="10" x2="3" y1="4" y2="4"/> <line x1="21" x2="12" y1="12" y2="12"/> <line x1="8" x2="3" y1="12" y2="12"/> <line x1="21" x2="16" y1="20" y2="20"/> <line x1="12" x2="3" y1="20" y2="20"/> <line x1="14" x2="14" y1="2" y2="6"/> <line x1="8" x2="8" y1="10" y2="14"/> <line x1="16" x2="16" y1="18" y2="22"/></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/> <path d="M21 3v5h-5"/> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/> <path d="M8 16H3v5"/></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol><symbol id="i-clipboard-paste" viewBox="0 0 24 24"><path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1Z"/> <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2M11 14h10"/> <path d="m17 10 4 4-4 4"/></symbol><symbol id="i-bird" viewBox="0 0 24 24"><path d="M16 7h.01"/> <path d="M3.4 18H12a8 8 0 0 0 8-8V7a4 4 0 0 0-7.28-2.3L2 20"/> <path d="m20 7 2 .5-2 .5"/> <path d="M10 18v3"/> <path d="M14 17.75V21"/> <path d="M7 18a6 6 0 0 0 3.84-10.61"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/> <path d="M20 3v4"/> <path d="M22 5h-4"/> <path d="M4 17v2"/> <path d="M5 18H3"/></symbol><symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M12 20h.01"/> <path d="M8.5 16.429a5 5 0 0 1 7 0"/> <path d="M5 12.859a10 10 0 0 1 5.17-2.69"/> <path d="M19 12.859a10 10 0 0 0-2.007-1.523"/> <path d="M2 8.82a15 15 0 0 1 4.177-2.643"/> <path d="M22 8.82a15 15 0 0 0-11.288-3.764"/> <path d="m2 2 20 20"/></symbol><symbol id="i-aperture" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="m14.31 8 5.74 9.94"/> <path d="M9.69 8h11.48"/> <path d="m7.38 12 5.74-9.94"/> <path d="M9.69 16 3.95 6.06"/> <path d="M14.31 16H2.83"/> <path d="m16.62 12-5.74 9.94"/></symbol><symbol id="i-timer" viewBox="0 0 24 24"><line x1="10" x2="14" y1="2" y2="2"/> <line x1="12" x2="15" y1="14" y2="11"/> <circle cx="12" cy="14" r="8"/></symbol><symbol id="i-ruler" viewBox="0 0 24 24"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/> <path d="m14.5 12.5 2-2"/> <path d="m11.5 9.5 2-2"/> <path d="m8.5 6.5 2-2"/> <path d="m17.5 15.5 2-2"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6"/> <path d="M10 14 21 3"/> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol><symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/> <circle cx="6" cy="18" r="3"/> <circle cx="18" cy="16" r="3"/></symbol><symbol id="i-map" viewBox="0 0 24 24"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/> <path d="M15 5.764v15"/> <path d="M9 3.236v15"/></symbol><symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/> <path d="M2 12h20"/></symbol><symbol id="i-arrow-up-down" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/> <path d="M17 20V4"/> <path d="m3 8 4-4 4 4"/> <path d="M7 4v16"/></symbol><symbol id="i-feather" viewBox="0 0 24 24"><path d="M12.67 19a2 2 0 0 0 1.416-.588l6.154-6.172a6 6 0 0 0-8.49-8.49L5.586 9.914A2 2 0 0 0 5 11.328V18a1 1 0 0 0 1 1z"/> <path d="M16 8 2 22"/> <path d="M17.5 15H9"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/> <circle cx="12" cy="12" r="10"/></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/> <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/> <path d="M4 22h16"/> <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/> <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/> <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="m9 12 2 2 4-4"/></symbol><symbol id="i-circle-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/> <path d="M12 17h.01"/></symbol><symbol id="i-shield-alert" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/> <path d="M12 8v4"/> <path d="M12 16h.01"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/> <path d="M12 2v2"/> <path d="M12 20v2"/> <path d="m4.93 4.93 1.41 1.41"/> <path d="m17.66 17.66 1.41 1.41"/> <path d="M2 12h2"/> <path d="M20 12h2"/> <path d="m6.34 17.66-1.41 1.41"/> <path d="m19.07 4.93-1.41 1.41"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol><symbol id="i-telescope" viewBox="0 0 24 24"><path d="m10.065 12.493-6.18 1.318a.934.934 0 0 1-1.108-.702l-.537-2.15a1.07 1.07 0 0 1 .691-1.265l13.504-4.44"/> <path d="m13.56 11.747 4.332-.924"/> <path d="m16 21-3.105-6.21"/> <path d="M16.485 5.94a2 2 0 0 1 1.455-2.425l1.09-.272a1 1 0 0 1 1.212.727l1.515 6.06a1 1 0 0 1-.727 1.213l-1.09.272a2 2 0 0 1-2.425-1.455z"/> <path d="m6.158 8.633 1.114 4.456"/> <path d="m8 21 3.105-6.21"/> <circle cx="12" cy="13" r="2"/></symbol><symbol id="i-crosshair" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/> <line x1="22" x2="18" y1="12" y2="12"/> <line x1="6" x2="2" y1="12" y2="12"/> <line x1="12" x2="12" y1="6" y2="2"/> <line x1="12" x2="12" y1="22" y2="18"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-trees" viewBox="0 0 24 24"><path d="M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z"/> <path d="M7 16v6"/> <path d="M13 19v3"/> <path d="M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5"/></symbol></svg>
+
+<header class="appbar">
+  <div class="wrap">
+    <div class="brand"><span class="logo"><svg class="ic"><use href="#i-bird"/></svg></span><b>Aves de Colombia</b></div>
+    <div class="desk-actions">
+      <button class="btn primary" type="button" data-act="identify"><svg class="ic"><use href="#i-camera"/></svg>Identificar foto</button>
+      <button class="btn" type="button" data-act="account"><svg class="ic"><use href="#i-list-checks"/></svg>Mi lista</button>
+      <button class="btn" type="button" data-act="random"><svg class="ic"><use href="#i-dices"/></svg>Al azar</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <div>
+    <div class="eyebrow">Guía de campo · datos en vivo de iNaturalist</div>
+    <h1><span class="count" id="heroCount">—</span> especies<br>en <span id="heroPlace">Colombia</span></h1>
+    <p class="lede">El país con más especies de aves del mundo. Filtra por lugar, mes y qué tan alcanzables son con tu equipo; abre una para ver fotos, cuándo y dónde aparece, y valida tus fotos.</p>
+  </div>
+  <button class="daily" id="daily" type="button" hidden></button>
+</section>
+
+<div class="bar">
+  <div class="wrap">
+    <label class="input">
+      <svg class="ic"><use href="#i-search"/></svg>
+      <span class="sr">Buscar especie</span>
+      <input id="q" type="search" placeholder="Buscar barranquero, Tangara, colibrí…" autocomplete="off" enterkeyhint="search">
+      <button class="icon-btn" id="qClear" type="button" aria-label="Borrar búsqueda" hidden><svg class="ic"><use href="#i-x"/></svg></button>
+    </label>
+    <div class="chips" id="chips" role="toolbar" aria-label="Filtros"></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="status">
+    <span class="txt" id="statusText">Conectando con iNaturalist<span class="loading-dots"></span></span>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Mi lista">
+        <button type="button" data-mine="all" aria-pressed="true">Todas</button>
+        <button type="button" data-mine="done" aria-pressed="false"><svg class="ic sm"><use href="#i-check"/></svg>Tengo</button>
+        <button type="button" data-mine="todo" aria-pressed="false">Me faltan</button>
+      </div>
+      <div class="seg" role="group" aria-label="Vista">
+        <button type="button" data-view="grid" aria-pressed="true" aria-label="Cuadrícula"><svg class="ic sm"><use href="#i-layout-grid"/></svg></button>
+        <button type="button" data-view="list" aria-pressed="false" aria-label="Lista"><svg class="ic sm"><use href="#i-list"/></svg></button>
+      </div>
+    </div>
+    <div class="progress"><i id="prog"></i></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div id="sentinel" style="height:1px"></div>
+</main>
+
+<footer class="wrap">
+  Datos y fotos de <a href="https://www.inaturalist.org" target="_blank" rel="noopener">iNaturalist</a>, solo registros de grado investigación. Cada foto conserva la licencia y autoría de su fotógrafo. Íconos: Lucide.
+</footer>
+
+<nav class="bnav" aria-label="Navegación">
+  <button type="button" class="on" data-act="explore"><svg class="ic"><use href="#i-compass"/></svg>Explorar</button>
+  <button type="button" class="cta" data-act="identify"><svg class="ic"><use href="#i-camera"/></svg>Identificar</button>
+  <button type="button" data-act="account"><svg class="ic"><use href="#i-list-checks"/></svg>Mi lista</button>
+  <button type="button" data-act="random"><svg class="ic"><use href="#i-dices"/></svg>Al azar</button>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-top">
+    <button class="icon-btn" id="close" type="button" aria-label="Volver"><svg class="ic lg"><use href="#i-arrow-left"/></svg></button>
+    <span class="ttl" id="sheetTitle"></span>
+    <button class="icon-btn" id="share" type="button" aria-label="Compartir enlace"><svg class="ic"><use href="#i-share-2"/></svg></button>
+  </div>
+  <div class="sheet-scroll" id="sheetScroll"><div class="sheet-body" id="sheetBody"></div></div>
+  <div class="sheet-actions" id="sheetActions">
+    <button class="btn" id="validateBtn" type="button"><svg class="ic"><use href="#i-camera"/></svg>Validar foto</button>
+    <button class="btn" id="mark" type="button"></button>
+  </div>
+</aside>
+
+<div class="scrim top" id="pScrim"></div>
+<div class="picker" id="picker" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+  <div class="grab"></div>
+  <div class="picker-head"><b id="pTitle"></b><button class="icon-btn" id="pClose" type="button" aria-label="Cerrar"><svg class="ic"><use href="#i-x"/></svg></button></div>
+  <div class="picker-search" id="pSearchWrap" hidden>
+    <label class="input"><svg class="ic"><use href="#i-search"/></svg><span class="sr">Buscar</span><input id="pSearch" type="search" autocomplete="off" enterkeyhint="search"></label>
+  </div>
+  <div class="picker-list" id="pList" role="listbox"></div>
+</div>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="icon-btn" type="button" aria-label="Cerrar foto"><svg class="ic lg"><use href="#i-x"/></svg></button>
+  <img id="lbImg" alt=""><p id="lbCap"></p>
+</div>
+
+<script>
+'use strict';
+const API = 'https://api.inaturalist.org/v1';
+const AVES = 3, COLOMBIA = 7196;
+const MONTHS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const MONTHS_FULL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const PRESETS = ['Colombia','Valle del Cauca','San Andrés','Cauca','Nariño','Antioquia','Magdalena','La Guajira','Meta','Amazonas','Chocó','Quindío','Caldas','Boyacá','Risaralda','Santander'];
+const REACH = {1:'Fácil', 2:'Posible', 3:'Difícil'};
+const REACH_DESC = {1:'Grandes o confiadas: tu 16-50 o 56mm alcanzan', 2:'Con comedero, bebedero o recorte del RAW', 3:'Pequeñas, lejanas o huidizas: necesitan teleobjetivo'};
+const SORTS = {obs:'Más observadas', rare:'Más raras', az:'A → Z'};
+const $ = id => document.getElementById(id);
+const ic = (n, c = '') => `<svg class="ic ${c}"><use href="#i-${n}"/></svg>`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const fmt = n => Number(n || 0).toLocaleString('es-CO');
+const pct = v => Math.round(v) + '%';
+const vibrate = () => { try{ navigator.vibrate && navigator.vibrate(10); }catch(e){} };
+
+/* ---------- Almacenamiento local ---------- */
+function lsGet(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } }
+function lsSet(k, v){ try{ if(v === null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; }catch(e){ return false; } }
+function toast(msg, icon = 'check'){
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role', 'status');
+  t.innerHTML = ic(icon, 'sm') + `<span>${esc(msg)}</span>`;
+  document.body.appendChild(t); setTimeout(() => t.remove(), 2400);
+}
+
+/* ---------- Estado ---------- */
+const saved = lsGet('aves-co-prefs', {});
+const state = {
+  place: (saved.place && !saved.place.lat) ? saved.place : {id:COLOMBIA, name:'Colombia'},
+  month:'', family:'', reach:'', endemic:false, threatened:false,
+  sort:'obs', q:'', view: saved.view || 'grid', mine:'all',
+  items:[], filtered:[], shown:0, loadId:0, total:0
+};
+function savePrefs(){ lsSet('aves-co-prefs', {place: state.place.lat ? null : state.place, view: state.view}); }
+let life = new Set(lsGet('aves-co-life', []));
+let inat = lsGet('aves-co-inat', {user:'', ids:[], at:0});
+let inatSet = new Set(inat.ids);
+const has = id => life.has(id) || inatSet.has(id);
+function saveLife(){ lsSet('aves-co-life', [...life]); updateStatus(); }
+
+/* ---------- API (ritmo amable: iNaturalist pide ~1 req/s) ---------- */
+const memCache = new Map();
+let lastCall = 0;
+async function api(path, params = {}){
+  const url = new URL(API + path);
+  Object.entries(params).forEach(([k, v]) => { if(v !== '' && v !== undefined && v !== null && v !== false) url.searchParams.set(k, v); });
+  const key = url.toString();
+  if(memCache.has(key)) return memCache.get(key);
+  const wait = Math.max(0, lastCall + 350 - Date.now());
+  lastCall = Date.now() + wait;
+  if(wait) await new Promise(r => setTimeout(r, wait));
+  const res = await fetch(key, {headers:{Accept:'application/json'}});
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  const json = await res.json();
+  memCache.set(key, json);
+  return json;
+}
+const medium = u => u ? u.replace(/\/(square|small|thumb)\./, '/medium.') : '';
+const large = u => u ? u.replace(/\/(square|small|thumb|medium)\./, '/large.') : '';
+function placeParams(){ const p = state.place; return p.lat ? {lat:p.lat, lng:p.lng, radius:p.radius || 20} : {place_id:p.id}; }
+function trim(r){
+  const t = r.taxon || {}, ph = t.default_photo || {}, cs = t.conservation_status || null;
+  return {id:t.id, n:t.preferred_common_name || '', s:t.name, c:r.count,
+    p:medium(ph.medium_url || ph.square_url || ph.url), a:ph.attribution || '',
+    cs: cs && cs.status ? String(cs.status).toUpperCase() : '', th:!!t.threatened, en:!!t.endemic, anc:t.ancestor_ids || []};
+}
+
+/* ---------- Consejos por familia y alcance con tu equipo ---------- */
+const GEAR = 'Tu alcance hoy es el 56mm (84mm equiv.). Para aves pequeñas acércate a 2–4 m (comederos, bebederos, flores) o recorta el RAW: un recorte 2x deja ~6,5 MP, suficiente para pantalla e Instagram.';
+const TIPS = {
+  Trochilidae:{r:1,g:'Colibrí',dist:'2–3 m de un bebedero',vel:'1/2500–1/4000 s',ap:'f/2–f/2.8',tip:'Espera junto a un bebedero o una heliconia en flor: repiten la ruta cada pocos minutos. El iridiscente solo aparece con la luz a tu espalda; de lado se ve negro. Para alas en movimiento baja a 1/250 s.',eq:'De los pocos grupos a tu alcance: 56mm a f/2 junto a un bebedero.'},
+  Thraupidae:{r:2,g:'Tángara',dist:'3–6 m, comederos de fruta',vel:'1/1000–1/2000 s',ap:'f/2.8–f/4',tip:'Pon banano o papaya madura en un comedero y espera. Se mueven rápido: ráfaga alta y AF-C con detección de aves. Fondo verde lejano para que el color resalte.',eq:'Con comedero a 3 m el 56mm alcanza. Sin comedero quedan diminutas.'},
+  Tyrannidae:{r:2,g:'Atrapamoscas',dist:'5–10 m, perchas expuestas',vel:'1/1600 s',ap:'f/4',tip:'Vuelven a la misma percha tras cada captura: enfoca la percha y espera el regreso. Bichofué y sirirí toleran bien a la gente.',eq:'En parques urbanos se dejan a 4–5 m: recorte moderado.'},
+  Psittacidae:{r:2,g:'Loro / guacamaya',dist:'10–30 m, dormideros',vel:'1/2000 s en vuelo',ap:'f/5.6',tip:'Llegan a los dormideros al atardecer y salen al amanecer. En vuelo: AF-C con zona amplia y paneo. En palmeras de parques se dejan fotografiar posados.',eq:'Posados en ciudad sí. En vuelo o lejos te quedas corto.'},
+  Ramphastidae:{r:2,g:'Tucán / pichí',dist:'5–15 m, árboles frutales',vel:'1/1000 s',ap:'f/4',tip:'Buscan árboles con fruta (yarumo, palmas). Mucho contraste entre pico y plumaje: compensa −0,7 EV para no quemar el pico.',eq:'Solo si el árbol está cerca o hay comedero.'},
+  Accipitridae:{r:3,g:'Gavilán / águila',dist:'15–100 m',vel:'1/2500 s en vuelo',ap:'f/5.6–f/8',tip:'El cielo de fondo engaña al fotómetro: +1 a +1,7 EV o el ave sale negra. Planean en térmicas entre 10 am y 2 pm.',eq:'Muy lejos, salvo el gavilán caminero posado en un poste cercano.'},
+  Cathartidae:{r:1,g:'Gallinazo / cóndor',dist:'5–50 m',vel:'1/2000 s',ap:'f/5.6',tip:'El gallinazo es el sujeto perfecto para practicar vuelo: abundante y grande. Cielo de fondo: +1 EV.',eq:'Practica vuelo con el 16-50 a 50mm.'},
+  Falconidae:{r:2,g:'Halcón / caracara',dist:'10–40 m',vel:'1/2000 s',ap:'f/5.6',tip:'Caracaras y pigua se posan en cercas junto a carreteras: dispara desde la moto detenida, se espantan menos que con una persona a pie.',eq:'Desde la moto a 6–8 m, posible con recorte.'},
+  Ardeidae:{r:1,g:'Garza',dist:'5–20 m, humedales',vel:'1/1600 s',ap:'f/5.6–f/8',tip:'Plumaje blanco: −0,7 a −1 EV y recupera sombras en el RAW. Mejor luz al amanecer. Son pacientes: compón con calma.',eq:'De los grupos más fáciles: se dejan a pocos metros en ríos y lagunas.'},
+  Threskiornithidae:{r:1,g:'Ibis / espátula',dist:'10–30 m',vel:'1/1600 s',ap:'f/5.6',tip:'Comen con la cabeza abajo: espera a que la levanten. Ráfaga.',eq:'El coquito en parques y potreros se deja acercar.'},
+  Pelecanidae:{r:1,g:'Pelícano',dist:'5–30 m, muelles',vel:'1/2000 s',ap:'f/5.6–f/8',tip:'En muelles se acercan a los pescadores. Para clavados preenfoca sobre el agua y ráfaga. El CPL corta los reflejos del mar.',eq:'Accesible en la costa y San Andrés: el 16-50 basta.'},
+  Fregatidae:{r:1,g:'Fragata',dist:'10–50 m',vel:'1/2000 s',ap:'f/8',tip:'Planean casi inmóviles sobre los muelles. Cielo detrás: +1 EV.',eq:'Sobre los muelles pasan bajo; el 16-50 puede bastar.'},
+  Sulidae:{r:3,g:'Piquero',dist:'10–50 m',vel:'1/3200 s',ap:'f/8',tip:'Clavados verticales muy rápidos: ráfaga continua desde que pliegan las alas.',eq:'Lejos salvo desde lancha.'},
+  Laridae:{r:1,g:'Gaviota / gaviotín',dist:'5–30 m, playas',vel:'1/2500 s',ap:'f/8',tip:'Blanco con agua brillante: −0,7 EV. Agáchate al ras de la arena.',eq:'Con pescadores cerca se acercan lo suficiente.'},
+  Scolopacidae:{r:2,g:'Playero',dist:'5–15 m, orilla',vel:'1/1600 s',ap:'f/5.6',tip:'Acuéstate a su altura y deja que la marea los acerque; no los persigas. Muchos son migratorios: septiembre a abril.',eq:'Agachado y quieto llegan a 4–5 m.'},
+  Charadriidae:{r:1,g:'Chorlo / alcaraván',dist:'5–15 m',vel:'1/1600 s',ap:'f/5.6',tip:'El alcaraván defiende el nido y se queda cerca: no lo molestes en época de cría. Ángulo bajo.',eq:'En potreros y canchas se deja a pocos metros.'},
+  Recurvirostridae:{r:1,g:'Cigüeñuela',dist:'8–20 m',vel:'1/1600 s',ap:'f/5.6',tip:'Patas larguísimas: deja aire abajo en el encuadre y busca reflejo en agua quieta.',eq:'En salinas y lagunas, accesible.'},
+  Jacanidae:{r:1,g:'Gallito de ciénaga',dist:'5–15 m',vel:'1/1600 s',ap:'f/5.6',tip:'Caminan sobre la vegetación flotante; al abrir las alas muestran el amarillo: ráfaga.',eq:'En humedales se deja a distancia corta.'},
+  Anatidae:{r:1,g:'Pato / iguasa',dist:'10–30 m',vel:'1/1600 s',ap:'f/5.6',tip:'Fotografía a nivel del agua. Los despegues son el momento: preenfoca y ráfaga.',eq:'En lagos de parques, accesibles.'},
+  Anhingidae:{r:1,g:'Pato aguja',dist:'8–20 m',vel:'1/1600 s',ap:'f/5.6',tip:'Secan las alas abiertas por largos ratos: pose garantizada.',eq:'Accesible en humedales.'},
+  Phalacrocoracidae:{r:1,g:'Cormorán',dist:'8–20 m',vel:'1/1600 s',ap:'f/5.6',tip:'Secan las alas abiertas sobre troncos. Plumaje negro: no subexpongas.',eq:'En represas y ríos, distancia media.'},
+  Ciconiidae:{r:1,g:'Cigüeña / garzón',dist:'15–40 m',vel:'1/1600 s',ap:'f/8',tip:'Muy grandes: incluye el paisaje; el ave pequeña en el encuadre también cuenta una historia.',eq:'Su tamaño compensa tu focal.'},
+  Aramidae:{r:1,g:'Carrao',dist:'8–20 m',vel:'1/1000 s',ap:'f/5.6',tip:'Camina lento por los bordes de humedales buscando caracoles.',eq:'Accesible.'},
+  Podicipedidae:{r:2,g:'Zambullidor',dist:'10–25 m',vel:'1/1600 s',ap:'f/5.6',tip:'Se sumergen sin aviso: cuenta los segundos bajo el agua para anticipar dónde salen.',eq:'Recorte moderado.'},
+  Rynchopidae:{r:2,g:'Rayador',dist:'15–30 m',vel:'1/3200 s',ap:'f/8',tip:'Vuelan rozando el agua con el pico: paneo paralelo a la orilla.',eq:'Recorte fuerte.'},
+  Columbidae:{r:1,g:'Paloma / tórtola',dist:'3–8 m',vel:'1/1000 s',ap:'f/2.8–f/4',tip:'Ideales para practicar enfoque al ojo y composición.',eq:'Perfectas para entrenar con el 56mm.'},
+  Strigidae:{r:2,g:'Búho',dist:'5–15 m, de noche',vel:'1/125–1/250 s',ap:'f/1.4–f/2',tip:'No uses flash directo repetido. Busca con guía local. ISO alto sin miedo: hasta 6400 la a6700 rinde bien.',eq:'El 56mm f/1.4 es tu arma de noche.'},
+  Tytonidae:{r:2,g:'Lechuza',dist:'5–15 m, de noche',vel:'1/125–1/250 s',ap:'f/1.4–f/2',tip:'Anidan en campanarios y galpones. Luz tenue lateral, nunca flash repetido.',eq:'El 56mm f/1.4 ayuda mucho.'},
+  Caprimulgidae:{r:2,g:'Guardacaminos',dist:'3–8 m, noche',vel:'1/125 s',ap:'f/1.4',tip:'Se posan en caminos de tierra de noche; sus ojos brillan con la linterna. Luz suave lateral.',eq:'El 56mm f/1.4 es ideal en vías rurales.'},
+  Steatornithidae:{r:3,g:'Guácharo',dist:'—',vel:'1/125 s',ap:'f/1.4',tip:'Vive en cuevas oscuras; las visitas tienen reglas estrictas de luz. Infórmate antes.',eq:'Muy difícil.'},
+  Picidae:{r:2,g:'Carpintero',dist:'5–12 m, troncos',vel:'1/1000 s',ap:'f/4',tip:'Rodean el tronco: quédate quieto y reaparecen de tu lado. El golpeteo te dice dónde están.',eq:'Con suerte a 5 m; si no, recorte fuerte.'},
+  Cracidae:{r:2,g:'Pava / guacharaca',dist:'8–20 m',vel:'1/800 s',ap:'f/4',tip:'Activas al amanecer. Bajo dosel oscuro: ISO auto hasta 6400 y apertura máxima.',eq:'Las guacharacas de finca se dejan ver.'},
+  Opisthocomidae:{r:1,g:'Pava hedionda',dist:'5–15 m',vel:'1/1000 s',ap:'f/4',tip:'Grupos ruidosos y lentos en la vegetación sobre ríos llaneros.',eq:'Accesible desde la orilla o en lancha.'},
+  Alcedinidae:{r:3,g:'Martín pescador',dist:'8–15 m, ríos',vel:'1/3200 s',ap:'f/5.6',tip:'Usan la misma rama sobre el agua: preenfoca en la percha y espera el clavado.',eq:'Muy desconfiados: lejos para tu equipo.'},
+  Momotidae:{r:1,g:'Barranquero',dist:'4–10 m',vel:'1/500–1/1000 s',ap:'f/2.8',tip:'Se queda quieto en ramas bajas balanceando la cola: tienes tiempo. Sombra densa: apertura máxima e ISO alto.',eq:'Buen candidato para el 56mm en parques y reservas.'},
+  Trogonidae:{r:2,g:'Trogón / quetzal',dist:'6–15 m',vel:'1/500 s',ap:'f/2.8',tip:'Permanecen inmóviles mucho tiempo. Ubícalos primero por el canto.',eq:'Posible a 6 m con recorte.'},
+  Galbulidae:{r:2,g:'Jacamar',dist:'5–10 m',vel:'1/1600 s',ap:'f/4',tip:'Cazan desde perchas fijas. Iridiscente: luz a tu espalda.',eq:'Recorte moderado.'},
+  Bucconidae:{r:2,g:'Bobo',dist:'5–10 m',vel:'1/800 s',ap:'f/2.8',tip:'Muy quietos en perchas a media altura: tiempo de sobra para componer.',eq:'Recorte moderado.'},
+  Icteridae:{r:2,g:'Oropéndola / turpial',dist:'5–20 m',vel:'1/1600 s',ap:'f/4',tip:'Las oropéndolas tienen colonias de nidos colgantes con ir y venir constante.',eq:'En colonias bajas el 56mm o el 16-50 sirven.'},
+  Turdidae:{r:1,g:'Mirla',dist:'4–8 m, prados',vel:'1/1000 s',ap:'f/2.8',tip:'Busca lombrices en el césped tras la lluvia. Ángulo bajo, a ras de pasto.',eq:'Perfecta para practicar con el 56mm.'},
+  Mimidae:{r:1,g:'Sinsonte',dist:'3–8 m',vel:'1/1000 s',ap:'f/4',tip:'Canta desde puntos altos y visibles: postes, antenas, copas.',eq:'Confiado en ciudades y costa.'},
+  Hirundinidae:{r:2,g:'Golondrina',dist:'3–15 m',vel:'1/3200 s',ap:'f/5.6',tip:'En vuelo son casi imposibles; fotografíalas posadas en cables al atardecer.',eq:'Posadas en cables, alcanzables.'},
+  Furnariidae:{r:3,g:'Trepatroncos y afines',dist:'4–10 m',vel:'1/1000 s',ap:'f/4',tip:'Sotobosque oscuro y movimiento constante: ISO alto y ráfaga.',eq:'Difícil con tu equipo.'},
+  Thamnophilidae:{r:3,g:'Hormiguero',dist:'3–8 m, sotobosque',vel:'1/500 s',ap:'f/1.8–f/2.8',tip:'Luz muy baja. Siguen hormigas legionarias: si encuentras una columna, espera ahí.',eq:'La apertura del 56mm ayuda; la distancia no.'},
+  Cotingidae:{r:2,g:'Gallito de roca y cotingas',dist:'5–15 m, leks',vel:'1/500 s',ap:'f/2.8',tip:'El gallito de roca se reúne en leks al amanecer en sitios conocidos. Ve con guía.',eq:'En leks habituados se acercan.'},
+  Pipridae:{r:3,g:'Saltarín',dist:'4–8 m',vel:'1/1000 s',ap:'f/2.8',tip:'Bailes de cortejo en ramas fijas: encontrada la rama, vuelven.',eq:'Pequeños: recorte fuerte.'},
+  Tityridae:{r:2,g:'Titira',dist:'8–15 m',vel:'1/1000 s',ap:'f/4',tip:'Se posan en ramas secas expuestas en la copa.',eq:'Recorte moderado.'},
+  Cuculidae:{r:1,g:'Garrapatero / cuco',dist:'5–10 m',vel:'1/1000 s',ap:'f/4',tip:'El garrapatero anda en grupo junto al ganado: acércate despacio en la moto.',eq:'En potreros se dejan a 5 m.'},
+  Rallidae:{r:2,g:'Polla de agua',dist:'8–20 m',vel:'1/1000 s',ap:'f/4',tip:'Salen al borde del juncal al amanecer. Quédate quieto.',eq:'En lagos urbanos, accesible.'},
+  Parulidae:{r:3,g:'Reinita',dist:'4–10 m',vel:'1/1600 s',ap:'f/4',tip:'Pequeñas e hiperactivas; muchas migratorias de octubre a abril. Siguen bandadas mixtas.',eq:'Muy difícil sin teleobjetivo.'},
+  Vireonidae:{r:3,g:'Verderón',dist:'5–12 m',vel:'1/1600 s',ap:'f/4',tip:'En el follaje alto; búscalos en bandadas mixtas.',eq:'Muy difícil.'},
+  Cardinalidae:{r:2,g:'Piranga / picogordo',dist:'5–10 m',vel:'1/1600 s',ap:'f/4',tip:'Varias son migratorias boreales; llegan a comederos de fruta.',eq:'Con comedero, posible.'},
+  Troglodytidae:{r:1,g:'Cucarachero',dist:'3–6 m',vel:'1/1000 s',ap:'f/2.8',tip:'El cucarachero común anida en casas y es confiado.',eq:'Buen sujeto en tu patio.'},
+  Passerellidae:{r:1,g:'Copetón',dist:'3–6 m',vel:'1/1000 s',ap:'f/2.8',tip:'Confiado en jardines y fincas de montaña.',eq:'Muy accesible con el 56mm.'},
+  Fringillidae:{r:2,g:'Eufonia / jilguero',dist:'4–8 m',vel:'1/1600 s',ap:'f/4',tip:'Llegan a comederos con fruta madura y a árboles con muérdago.',eq:'Con comedero, sí.'},
+  Corvidae:{r:2,g:'Carriquí',dist:'5–15 m',vel:'1/1000 s',ap:'f/4',tip:'Bandadas ruidosas y curiosas que se acercan solas.',eq:'Alcanzables con paciencia.'},
+  Tinamidae:{r:3,g:'Tinamú',dist:'5–15 m',vel:'1/500 s',ap:'f/2',tip:'Caminan por el suelo del bosque oscuro; se oyen más de lo que se ven.',eq:'Difícil.'},
+  Odontophoridae:{r:3,g:'Perdiz',dist:'5–15 m',vel:'1/500 s',ap:'f/2.8',tip:'Grupos tímidos en el suelo. Espera en silencio en bordes de bosque.',eq:'Difícil.'},
+  Apodidae:{r:3,g:'Vencejo',dist:'—',vel:'1/4000 s',ap:'f/5.6',tip:'Casi nunca se posan. Practica paneo con zona amplia de AF.',eq:'Muy difícil con cualquier equipo.'}
+};
+const GENERIC = {g:'Ave',dist:'5–15 m',vel:'1/1600 s',ap:'f/4–f/5.6',tip:'Llega antes del amanecer, quédate quieto y deja que el ave se acostumbre a ti. Enfoca al ojo y dispara en ráfaga.',eq:'Si a 50mm el ave ocupa menos de un tercio del encuadre, el recorte no vale la pena.'};
+let famById = {}, famList = [];
+function famOf(it){
+  if(it.f !== undefined) return it.f;
+  const id = (it.anc || []).find(a => famById[a]);
+  it.f = id || null; return it.f;
+}
+function reachOf(it){ const f = famOf(it); if(!f) return 0; const t = TIPS[famById[f].name]; return t ? t.r : 0; }
+const tipsFor = n => TIPS[n] || GENERIC;
+
+/* ---------- Capas con historial (botón atrás del celular) ---------- */
+const layers = [];
+function pushLayer(name, onClose, hash){
+  layers.push({name, onClose});
+  try{ history.pushState({layer:name}, '', hash || location.pathname + location.search); }catch(e){}
+}
+function topLayer(){ return layers[layers.length - 1]; }
+function closeTop(){ if(!layers.length) return; history.back(); }
+window.addEventListener('popstate', () => { const l = layers.pop(); if(l) l.onClose(); });
+
+/* ---------- Carga de especies ---------- */
+function baseParams(){
+  return {...placeParams(), taxon_id: state.family || AVES, quality_grade:'research',
+    month: state.month, endemic: state.endemic ? 'true' : '', threatened: state.threatened ? 'true' : '',
+    locale:'es', preferred_place_id: COLOMBIA};
+}
+async function loadSpecies(){
+  const myId = ++state.loadId;
+  const p = baseParams();
+  const key = 'aves-co-v2:' + JSON.stringify(p);
+  $('statusText').innerHTML = 'Cargando especies<span class="loading-dots"></span>';
+  setProg(5); skeleton(); renderChips();
+  const cached = lsGet(key, null);
+  if(cached && Date.now() - cached.t < 12 * 3600e3){
+    state.items = cached.items; state.total = cached.total; setProg(0); afterLoad(); return;
+  }
+  try{
+    const items = [];
+    let page = 1, pages = 1, total = 0;
+    do{
+      const data = await api('/observations/species_counts', {...p, per_page:500, page});
+      if(myId !== state.loadId) return;
+      total = data.total_results || 0;
+      pages = Math.min(Math.ceil(total / 500), 10);
+      items.push(...(data.results || []).map(trim));
+      state.items = items; state.total = total;
+      setProg(Math.round(page / Math.max(pages, 1) * 100));
+      if(page === 1) afterLoad(true);
+      page++;
+    } while(page <= pages);
+    if(!lsSet(key, {t:Date.now(), total, items})){ pruneCache(); lsSet(key, {t:Date.now(), total, items}); }
+    afterLoad();
+  }catch(err){
+    if(myId !== state.loadId) return;
+    if(cached){ state.items = cached.items; state.total = cached.total; setProg(0); afterLoad(false, true); return; }
+    setProg(0);
+    $('grid').innerHTML = `<div class="empty">${ic('wifi-off')}<h3>Sin conexión con iNaturalist</h3><p>Revisa tu internet e intenta de nuevo.</p><button class="btn primary" type="button" id="retry">${ic('refresh-cw')}Reintentar</button></div>`;
+    $('retry').onclick = loadSpecies;
+    $('statusText').textContent = 'Sin conexión';
+  }
+}
+function pruneCache(){ try{ Object.keys(localStorage).filter(k => k.startsWith('aves-co-v')).forEach(k => localStorage.removeItem(k)); }catch(e){} }
+function afterLoad(partial, stale){
+  if(!state.family && !state.endemic && !state.threatened && !state.month) $('heroCount').textContent = fmt(state.total);
+  $('heroPlace').textContent = state.place.lat ? 'tu zona' : state.place.name;
+  render(stale);
+  if(!partial){ setProg(0); renderDaily(); }
+}
+function setProg(v){ $('prog').style.width = v + '%'; }
+function skeleton(){ $('grid').innerHTML = Array.from({length:12}, () => '<div class="skel"></div>').join(''); }
+
+/* ---------- Chips de filtro ---------- */
+function renderChips(){
+  const fam = state.family && famById[state.family];
+  const chips = [
+    {k:'place', icon: state.place.lat ? 'locate-fixed' : 'map-pin', label: state.place.lat ? 'Cerca de mí' : state.place.name, on: !(state.place.id === COLOMBIA && !state.place.lat), menu:true},
+    {k:'month', icon:'calendar-days', label: state.month ? MONTHS_FULL[state.month - 1] : 'Mes', on: !!state.month, menu:true},
+    {k:'reach', icon:'aperture', label: state.reach ? REACH[state.reach] + ' con mi equipo' : 'Alcance', on: !!state.reach, menu:true},
+    {k:'family', icon:'feather', label: fam ? (fam.common || fam.name) : 'Familia', on: !!state.family, menu:true},
+    {k:'endemic', icon:'star', label:'Endémicas', on: state.endemic},
+    {k:'threat', icon:'shield-alert', label:'Amenazadas', on: state.threatened},
+    {k:'sort', icon:'arrow-up-down', label: SORTS[state.sort], on:false, menu:true}
+  ];
+  $('chips').innerHTML = chips.map(c => `<button type="button" class="chip${c.on ? ' on' : ''}" data-chip="${c.k}" ${c.menu ? 'aria-haspopup="dialog"' : `aria-pressed="${c.on}"`}>${ic(c.icon)}<span>${esc(c.label)}</span>${c.menu ? ic('chevron-down', 'chev') : ''}</button>`).join('');
+}
+$('chips').addEventListener('click', e => {
+  const b = e.target.closest('[data-chip]'); if(!b) return;
+  const k = b.dataset.chip;
+  if(k === 'endemic'){ state.endemic = !state.endemic; vibrate(); loadSpecies(); }
+  else if(k === 'threat'){ state.threatened = !state.threatened; vibrate(); loadSpecies(); }
+  else if(k === 'place') pickPlace();
+  else if(k === 'month') pickMonth();
+  else if(k === 'reach') pickReach();
+  else if(k === 'family') pickFamily();
+  else if(k === 'sort') pickSort();
+});
+
+/* ---------- Selector inferior genérico ---------- */
+let pickerSearch = null;
+function openPicker(title, {search} = {}){
+  $('pTitle').textContent = title;
+  $('pSearchWrap').hidden = !search;
+  $('pSearch').value = '';
+  if(search){ $('pSearch').placeholder = search.placeholder; pickerSearch = search.onInput; } else pickerSearch = null;
+  $('pList').scrollTop = 0;
+  if(topLayer() && topLayer().name === 'picker'){ return; }
+  $('picker').classList.add('on'); $('pScrim').classList.add('on');
+  pushLayer('picker', hidePicker);
+}
+function hidePicker(){ $('picker').classList.remove('on'); $('pScrim').classList.remove('on'); pickerSearch = null; }
+function closePicker(){ if(topLayer() && topLayer().name === 'picker') closeTop(); }
+$('pClose').onclick = closePicker; $('pScrim').onclick = closePicker;
+let pT;
+$('pSearch').addEventListener('input', e => { clearTimeout(pT); const q = e.target.value; pT = setTimeout(() => pickerSearch && pickerSearch(q), 220); });
+function optHTML(o, selected){
+  const lead = o.dot ? `<span class="lead"><span class="dot" style="background:${o.dot}"></span></span>` : o.icon ? `<span class="lead">${ic(o.icon)}</span>` : '';
+  return `<button type="button" class="opt" role="option" data-v="${esc(o.v)}" aria-selected="${String(o.v) === String(selected)}">${lead}<span class="t"><span>${esc(o.label)}</span>${o.sub ? `<small>${esc(o.sub)}</small>` : ''}</span>${ic('check', 'chk')}</button>`;
+}
+function fillList(opts, selected, onPick){
+  $('pList').innerHTML = opts.length ? opts.map(o => optHTML(o, selected)).join('') : '<p class="note" style="padding:12px">Sin resultados.</p>';
+  $('pList').querySelectorAll('.opt').forEach(b => b.onclick = () => { vibrate(); const o = opts.find(x => String(x.v) === b.dataset.v); closePicker(); onPick(o); });
+}
+
+function pickSort(){
+  openPicker('Ordenar');
+  fillList(Object.entries(SORTS).map(([v, label]) => ({v, label, icon: v === 'rare' ? 'sparkles' : v === 'az' ? 'list' : 'trophy'})), state.sort, o => { state.sort = o.v; renderChips(); render(); });
+}
+function pickReach(){
+  openPicker('Alcance con tu equipo');
+  const opts = [{v:'', label:'Cualquier alcance', icon:'aperture'}].concat([1, 2, 3].map(r => ({v:String(r), label:REACH[r], sub:REACH_DESC[r], dot:`var(--${r === 1 ? 'ok' : r === 2 ? 'mid' : 'danger'})`})));
+  fillList(opts, state.reach, o => { state.reach = o.v; renderChips(); render(); });
+  if(!famList.length) $('pList').insertAdjacentHTML('beforeend', '<p class="note" style="padding:0 12px">Cargando familias para calcular el alcance…</p>');
+}
+function pickMonth(){
+  openPicker('Mes');
+  const now = new Date().getMonth();
+  $('pList').innerHTML = `<div class="mgrid"><button type="button" class="all" data-m="" aria-selected="${!state.month}">Todo el año</button>${MONTHS.map((m, i) => `<button type="button" data-m="${i + 1}" aria-selected="${String(state.month) === String(i + 1)}">${m}${i === now ? '<small>AHORA</small>' : ''}</button>`).join('')}</div><p class="note">Muestra las especies registradas en ese mes en cualquier año.</p>`;
+  $('pList').querySelectorAll('[data-m]').forEach(b => b.onclick = () => { vibrate(); state.month = b.dataset.m; closePicker(); loadSpecies(); });
+}
+function pickFamily(){
+  const base = () => [{v:'', label:'Todas las familias', icon:'bird'}].concat(famList.map(f => {
+    const r = TIPS[f.name] ? TIPS[f.name].r : 0;
+    return {v:String(f.id), label:f.common || f.name, sub:f.name + (r ? ' · ' + REACH[r] : ''), dot: r ? `var(--${r === 1 ? 'ok' : r === 2 ? 'mid' : 'danger'})` : null, icon:'feather'};
+  }));
+  const pick = o => { state.family = o.v; loadSpecies(); };
+  openPicker('Familia', {search:{placeholder:'Buscar familia…', onInput:q => {
+    const n = norm(q); fillList(base().filter(o => !n || norm(o.label + ' ' + (o.sub || '')).includes(n)), state.family, pick);
+  }}});
+  if(!famList.length){ $('pList').innerHTML = '<p class="note" style="padding:12px">Cargando familias<span class="loading-dots"></span></p>'; return; }
+  fillList(base(), state.family, pick);
+}
+const placeCache = {Colombia:{id:COLOMBIA, name:'Colombia'}};
+const parseLoc = s => { const m = String(s || '').split(',').map(Number); return m.length === 2 && !m.some(isNaN) ? m : null; };
+function pickPlace(){
+  const presets = () => [{v:'near', label:'Cerca de mí', sub:'Aves registradas a 20 km de donde estás', icon:'locate-fixed'}]
+    .concat(PRESETS.map(p => ({v:'p:' + p, label:p, icon:'map-pin'})));
+  const sel = state.place.lat ? 'near' : 'p:' + state.place.name;
+  const onPick = async o => {
+    if(o.v === 'near') return nearMe();
+    if(o.v.startsWith('p:')){
+      const name = o.v.slice(2);
+      try{ const pl = await resolvePlace(name); if(pl) setPlace(pl); }catch(e){ toast('No pude buscar ese lugar', 'wifi-off'); }
+      return;
+    }
+    setPlace(o.place);
+  };
+  openPicker('Lugar', {search:{placeholder:'Municipio, parque, reserva…', onInput: async q => {
+    if(q.trim().length < 3){ fillList(presets(), sel, onPick); return; }
+    try{
+      const d = await api('/places/autocomplete', {q:q.trim(), per_page:15});
+      const co = (d.results || []).filter(x => /colombia|, CO\b|\bCO$/i.test(x.display_name || ''));
+      const res = (co.length ? co : (d.results || [])).slice(0, 12);
+      fillList(res.map(r => ({v:'id:' + r.id, label:r.name || r.display_name, sub:r.display_name, icon:'map', place:{id:r.id, name:r.name || r.display_name, loc:parseLoc(r.location)}})), sel, onPick);
+    }catch(e){}
+  }}});
+  fillList(presets(), sel, onPick);
+}
+async function resolvePlace(name){
+  if(placeCache[name]) return placeCache[name];
+  const d = await api('/places/autocomplete', {q:name, per_page:10});
+  const r = (d.results || []).find(x => /colombia|, CO\b|\bCO$/i.test(x.display_name || '')) || (d.results || [])[0];
+  if(!r) return null;
+  return placeCache[name] = {id:r.id, name, loc:parseLoc(r.location)};
+}
+function nearMe(){
+  if(!navigator.geolocation){ toast('Este navegador no da ubicación', 'triangle-alert'); return; }
+  toast('Buscando tu ubicación…', 'locate-fixed');
+  navigator.geolocation.getCurrentPosition(pos => {
+    setPlace({lat:+pos.coords.latitude.toFixed(4), lng:+pos.coords.longitude.toFixed(4), radius:20, name:'tu zona (20 km)'});
+  }, () => toast('Permite la ubicación para usar "Cerca de mí"', 'triangle-alert'), {enableHighAccuracy:false, timeout:12000, maximumAge:600000});
+}
+function setPlace(pl){
+  state.place = pl; state.family = '';
+  savePrefs(); loadFamilies(); loadSpecies();
+}
+
+/* ---------- Render ---------- */
+function applyFilters(){
+  const q = norm(state.q);
+  const list = state.items.filter(it => {
+    if(q && !norm(it.n).includes(q) && !norm(it.s).includes(q)) return false;
+    if(state.mine === 'done' && !has(it.id)) return false;
+    if(state.mine === 'todo' && has(it.id)) return false;
+    if(state.reach && String(reachOf(it)) !== state.reach) return false;
+    return true;
+  });
+  if(state.sort === 'obs') list.sort((a, b) => b.c - a.c);
+  else if(state.sort === 'rare') list.sort((a, b) => a.c - b.c);
+  else list.sort((a, b) => (a.n || a.s).localeCompare(b.n || b.s, 'es'));
+  return list;
+}
+let staleFlag = false;
+function render(stale){
+  if(stale !== undefined) staleFlag = !!stale;
+  state.filtered = applyFilters();
+  state.shown = 0;
+  const g = $('grid');
+  g.className = 'grid' + (state.view === 'list' ? ' list' : '');
+  g.innerHTML = '';
+  updateStatus();
+  renderChips();
+  if(!state.filtered.length){
+    g.innerHTML = `<div class="empty">${ic('telescope')}<h3>Nada con esos filtros</h3><p>Prueba otro mes, quita un filtro o cambia de lugar.</p></div>`;
+    return;
+  }
+  more();
+}
+function updateStatus(){
+  if(!state.items.length) return;
+  const here = state.items.filter(it => has(it.id)).length;
+  $('statusText').innerHTML = `<b>${fmt(state.filtered.length)}</b> especies · ${ic('check', 'sm')} ${fmt(here)} tuyas${staleFlag ? ` <span class="pill">${ic('wifi-off', 'sm')} copia guardada</span>` : ''}`;
+}
+function more(){
+  const slice = state.filtered.slice(state.shown, state.shown + 48);
+  state.shown += slice.length;
+  $('grid').insertAdjacentHTML('beforeend', slice.map(card).join(''));
+}
+function tickHTML(id){
+  const mine = life.has(id), fromInat = inatSet.has(id) && !mine;
+  const cls = mine ? ' on' : fromInat ? ' inat' : '';
+  const label = mine ? 'Quitar de mi lista' : fromInat ? 'En tus observaciones de iNaturalist' : 'Marcar como fotografiada';
+  return `<button class="tick${cls}" type="button" data-tick="${id}" aria-pressed="${mine || fromInat}" aria-label="${label}" title="${label}">${ic(mine || fromInat ? 'check' : 'plus')}</button>`;
+}
+function card(it){
+  const b = [];
+  if(it.en) b.push(`<span class="badge">${ic('star')}ENDÉMICA</span>`);
+  if(['VU','EN','CR'].includes(it.cs)) b.push(`<span class="badge risk">${ic('shield-alert')}${esc(it.cs)}</span>`);
+  else if(it.th) b.push(`<span class="badge risk">${ic('shield-alert')}AMENAZA</span>`);
+  const r = reachOf(it);
+  return `<div class="card" role="button" tabindex="0" data-id="${it.id}">
+    <div class="ph">${it.p ? `<img loading="lazy" decoding="async" src="${esc(it.p)}" alt="${esc(it.n || it.s)}">` : ''}</div>
+    <div class="badges">${b.join('')}</div>
+    <div class="meta">
+      <span class="cn">${esc(it.n || it.s)}</span>
+      <span class="sn">${esc(it.s)}</span>
+      <span class="obs"><span>${ic('eye', 'sm')}${fmt(it.c)}</span>${r ? `<span class="reach r${r}">${REACH[r]}</span>` : ''}</span>
+    </div>
+    ${tickHTML(it.id)}
+  </div>`;
+}
+function syncTick(id){ document.querySelectorAll(`[data-tick="${id}"]`).forEach(t => { t.outerHTML = tickHTML(id); }); }
+function toggleLife(id){
+  if(!life.has(id) && inatSet.has(id)){ toast('Ya está en tus observaciones de iNaturalist', 'globe'); return; }
+  const add = !life.has(id);
+  add ? life.add(id) : life.delete(id);
+  vibrate(); saveLife(); syncTick(id); updateMark();
+  toast(add ? 'Agregada a tu lista' : 'Quitada de tu lista', add ? 'circle-check' : 'x');
+}
+new IntersectionObserver(e => { if(e[0].isIntersecting && state.shown < state.filtered.length) more(); }, {rootMargin:'900px'}).observe($('sentinel'));
+$('grid').addEventListener('click', e => {
+  const t = e.target.closest('[data-tick]');
+  if(t){ e.stopPropagation(); toggleLife(+t.dataset.tick); return; }
+  const c = e.target.closest('.card'); if(!c) return;
+  const it = state.items.find(x => x.id == c.dataset.id);
+  if(it) openSheet(it);
+});
+$('grid').addEventListener('keydown', e => {
+  if((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('card')){ e.preventDefault(); e.target.click(); }
+});
+
+/* ---------- Ave del día ---------- */
+function renderDaily(){
+  const pool = state.items.filter(it => it.p).sort((a, b) => b.c - a.c).slice(0, 300);
+  if(!pool.length){ $('daily').hidden = true; return; }
+  const d = new Date(); const seed = d.getFullYear() * 400 + d.getMonth() * 31 + d.getDate() + (state.place.id || 0);
+  const it = pool[(seed * 9301 + 49297) % 233280 % pool.length];
+  $('daily').innerHTML = `<img src="${esc(it.p)}" alt=""><span class="t"><span class="k">${ic('sun', 'sm')}Ave del día</span><span class="n">${esc(it.n || it.s)}</span><i>${esc(it.s)}</i></span>${ic('chevron-down')}`;
+  $('daily').onclick = () => openSheet(it);
+  $('daily').hidden = false;
+}
+
+/* ---------- Hoja: ficha, identificar, mi lista ---------- */
+let current = null, sheetMode = '';
+function showSheet(hash){
+  if(topLayer() && topLayer().name === 'sheet'){
+    try{ history.replaceState({layer:'sheet'}, '', hash || location.pathname + location.search); }catch(e){}
+  } else {
+    $('sheet').classList.add('on'); $('scrim').classList.add('on');
+    document.body.style.overflow = 'hidden';
+    pushLayer('sheet', hideSheet, hash);
+  }
+  $('sheetScroll').scrollTop = 0;
+  setNav(sheetMode === 'identify' ? 'identify' : sheetMode === 'account' ? 'account' : 'explore');
+}
+function hideSheet(){
+  current = null; sheetMode = '';
+  $('sheet').classList.remove('on'); $('scrim').classList.remove('on');
+  $('lightbox').hidden = true;
+  document.body.style.overflow = '';
+  setNav('explore');
+}
+function closeSheet(){ if(topLayer() && topLayer().name === 'sheet') closeTop(); }
+$('close').onclick = closeSheet; $('scrim').onclick = closeSheet;
+document.addEventListener('keydown', e => {
+  if(e.key !== 'Escape') return;
+  if(!$('lightbox').hidden) $('lightbox').hidden = true; else closeTop();
+});
+function sheetChrome(title, actions, share){
+  $('sheetTitle').textContent = title;
+  $('sheetActions').hidden = !actions;
+  $('share').hidden = !share;
+}
+function setNav(k){ document.querySelectorAll('.bnav [data-act]').forEach(b => b.classList.toggle('on', b.dataset.act === k)); }
+
+function openSheet(it, keepPhoto){
+  current = it; sheetMode = 'species';
+  if(!keepPhoto) clearUpload();
+  sheetChrome(it.n || it.s, true, true);
+  updateMark();
+  const r = reachOf(it);
+  $('sheetBody').innerHTML = `
+    <div class="gallery" id="gal">${it.p ? `<figure><img src="${esc(large(it.p))}" alt="" data-cap="${esc(it.a)}"><figcaption>${esc(it.a)}</figcaption></figure>` : ''}</div>
+    <div>
+      <h2>${esc(it.n || it.s)}</h2>
+      <div class="taxo"><i>${esc(it.s)}</i>${it.c ? ` · ${fmt(it.c)} obs. en ${esc(state.place.name)}` : ''}<span id="taxo"></span></div>
+      <div class="pills">${it.en ? `<span class="badge">${ic('star')}ENDÉMICA DE COLOMBIA</span>` : ''}${it.cs ? `<span class="badge ${['VU','EN','CR'].includes(it.cs) ? 'risk' : ''}">${ic('shield-alert')}UICN ${esc(it.cs)}</span>` : ''}${r ? `<span class="badge"><span class="reach r${r}">${REACH[r]} con tu equipo</span></span>` : ''}</div>
+    </div>
+    <div id="settingsWrap"><h3 class="sec">${ic('camera')}Cómo fotografiarla</h3><p class="note">Cargando<span class="loading-dots"></span></p></div>
+    <div id="validator">${validatorHTML(it)}</div>
+    <div><h3 class="sec">${ic('calendar-days')}Cuándo se observa</h3><div id="hist" class="hist"></div><p class="note">Refleja cuándo la gente la reporta, no solo cuándo está. Barra resaltada: mes con más registros; en dorado, el mes actual.</p></div>
+    <div><h3 class="sec">${ic('map-pin')}Dónde la han visto</h3><ul class="places" id="places"><li>Cargando…</li></ul></div>
+    <div id="wikiWrap"></div>
+    <div><h3 class="sec">${ic('external-link')}Más información</h3>
+    <div class="links">
+      <a href="https://www.inaturalist.org/taxa/${it.id}" target="_blank" rel="noopener">${ic('globe')}iNaturalist${ic('external-link', 'ext')}</a>
+      <a href="https://www.inaturalist.org/observations?taxon_id=${it.id}&${new URLSearchParams(placeParams())}&subview=map" target="_blank" rel="noopener">${ic('map')}Mapa${ic('external-link', 'ext')}</a>
+      <a href="https://xeno-canto.org/explore?query=${encodeURIComponent(it.s)}" target="_blank" rel="noopener">${ic('music')}Canto${ic('external-link', 'ext')}</a>
+      <a href="https://ebird.org/search?q=${encodeURIComponent(it.s)}" target="_blank" rel="noopener">${ic('bird')}eBird${ic('external-link', 'ext')}</a>
+    </div></div>`;
+  showSheet('#sp-' + it.id);
+  bindValidator();
+  loadDetail(it);
+}
+function updateMark(){
+  if(!current) return;
+  const mine = life.has(current.id), fromInat = inatSet.has(current.id);
+  $('mark').innerHTML = mine ? `${ic('circle-check')}Fotografiada` : fromInat ? `${ic('globe')}En iNaturalist` : `${ic('plus')}La fotografié`;
+  $('mark').className = 'btn ' + (mine || fromInat ? 'ok' : 'primary');
+}
+$('mark').onclick = () => { if(current) toggleLife(current.id); };
+$('validateBtn').onclick = () => {
+  const v = $('validator'); if(!v) return;
+  v.scrollIntoView({behavior:'smooth', block:'start'});
+  if(!upload){ const inp = $('vFile'); if(inp) inp.click(); }
+};
+$('share').onclick = async () => {
+  if(!current) return;
+  const url = location.href.split('#')[0] + '#sp-' + current.id;
+  try{ if(navigator.share && location.protocol === 'https:'){ await navigator.share({title:current.n || current.s, url}); return; } }catch(e){ return; }
+  try{ await navigator.clipboard.writeText(url); toast('Enlace copiado', 'copy'); }catch(e){ toast(url, 'share-2'); }
+};
+document.addEventListener('click', e => {
+  const img = e.target.closest('.gallery img'); if(!img) return;
+  $('lbImg').src = img.src; $('lbCap').textContent = img.dataset.cap || '';
+  $('lightbox').hidden = false;
+});
+$('lightbox').onclick = () => { $('lightbox').hidden = true; };
+
+async function loadDetail(it){
+  const id = it.id, pp = placeParams();
+  api(`/taxa/${id}`, {locale:'es', preferred_place_id:COLOMBIA}).then(d => {
+    if(!current || current.id !== id) return;
+    const t = (d.results || [])[0]; if(!t) return;
+    const anc = t.ancestors || [];
+    const fam = anc.find(a => a.rank === 'family'), ord = anc.find(a => a.rank === 'order');
+    $('taxo').innerHTML = `${fam ? `<br>Familia ${esc(fam.preferred_common_name || '')} <i>${esc(fam.name)}</i>` : ''}${ord ? ` · ${esc(ord.name)}` : ''}`;
+    const photos = (t.taxon_photos || []).slice(0, 10).map(tp => tp.photo).filter(Boolean);
+    if(photos.length){
+      $('gal').innerHTML = photos.map(p => { const cap = esc(p.attribution || ''); return `<figure><img loading="lazy" src="${esc(p.large_url || large(p.medium_url || p.url))}" alt="" data-cap="${cap}"><figcaption>${cap}</figcaption></figure>`; }).join('');
+    }
+    renderTips(tipsFor(fam && fam.name));
+    const summary = t.wikipedia_summary ? new DOMParser().parseFromString(t.wikipedia_summary, 'text/html').body.textContent : '';
+    if(summary) $('wikiWrap').innerHTML = `<h3 class="sec">${ic('feather')}Sobre la especie</h3><p class="wiki">${esc(summary)}</p>${t.wikipedia_url ? `<p class="note"><a href="${esc(t.wikipedia_url)}" target="_blank" rel="noopener">Leer más en Wikipedia</a></p>` : ''}`;
+  }).catch(() => { if(current && current.id === id) renderTips(GENERIC); });
+
+  api('/observations/histogram', {taxon_id:id, ...pp, date_field:'observed', interval:'month_of_year', quality_grade:'research'}).then(d => {
+    if(!current || current.id !== id) return;
+    const m = (d.results && d.results.month_of_year) || {};
+    const vals = MONTHS.map((_, i) => m[i + 1] || 0);
+    const max = Math.max(...vals, 1), now = new Date().getMonth();
+    $('hist').innerHTML = vals.map((v, i) => `<div class="b ${v === max && v > 0 ? 'top' : ''} ${i === now ? 'now' : ''}" title="${MONTHS[i]}: ${fmt(v)} registros"><i style="height:${Math.round(v / max * 100)}%"></i><span>${MONTHS[i][0]}</span></div>`).join('');
+  }).catch(() => { if($('hist')) $('hist').innerHTML = '<p class="note">Sin datos mensuales.</p>'; });
+
+  api('/observations', {taxon_id:id, ...pp, quality_grade:'research', per_page:200, order_by:'observed_on'}).then(d => {
+    if(!current || current.id !== id) return;
+    const counts = {};
+    (d.results || []).forEach(o => {
+      const pg = (o.place_guess || '').split(',').map(s => s.trim()).filter(s => s && !/^colombia$/i.test(s) && !/^\d/.test(s));
+      if(!pg.length) return;
+      const k = pg.slice(-2).join(', ');
+      counts[k] = (counts[k] || 0) + 1;
+    });
+    const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 7);
+    $('places').innerHTML = top.length ? top.map(([k, v]) => `<li>${ic('map-pin')}<span>${esc(k)}</span><span>${v}</span></li>`).join('') : '<li>Sin localidades públicas.</li>';
+  }).catch(() => { if($('places')) $('places').innerHTML = '<li>No se pudieron cargar.</li>'; });
+}
+function renderTips(t){
+  if(!$('settingsWrap')) return;
+  $('settingsWrap').innerHTML = `
+    <h3 class="sec">${ic('camera')}Cómo fotografiarla · ${esc(t.g)}</h3>
+    <div class="settings">
+      <div class="set">${ic('ruler')}<small>Distancia</small><b>${esc(t.dist)}</b></div>
+      <div class="set">${ic('timer')}<small>Velocidad</small><b>${esc(t.vel)}</b></div>
+      <div class="set">${ic('aperture')}<small>Apertura</small><b>${esc(t.ap)}</b></div>
+      <div class="set">${ic('crosshair')}<small>a6700</small><b>M · ISO auto · AF-C · Ave</b></div>
+    </div>
+    <div class="tipbox"><p>${esc(t.tip)}</p><p><b>Con tu equipo:</b> ${esc(t.eq)}</p></div>
+    <p class="note">${esc(GEAR)}</p>`;
+}
+
+/* ---------- Validación de fotos (iNaturalist Vision) ---------- */
+const TOKEN_KEY = 'aves-co-token';
+function getToken(){ const t = lsGet(TOKEN_KEY, null); return (!t || Date.now() - t.at > 23.5 * 3600e3) ? '' : t.v; }
+function setToken(v){ lsSet(TOKEN_KEY, v ? {v, at:Date.now()} : null); }
+let upload = null;
+function clearUpload(){ if(upload) URL.revokeObjectURL(upload.url); upload = null; }
+function tokenHTML(){
+  if(getToken()){
+    const left = Math.max(0, 23.5 - (Date.now() - lsGet(TOKEN_KEY, {at:0}).at) / 3600e3);
+    return `<div class="exif"><span>${ic('circle-check', 'sm')}Reconocimiento activo · quedan ~${Math.floor(left)} h</span><button class="btn sm" type="button" id="tokClear">${ic('x', 'sm')}Quitar token</button></div>`;
+  }
+  return `<details class="tok" ${upload ? 'open' : ''}>
+    <summary>${ic('sparkles')}Activar reconocimiento automático${ic('chevron-down', 'chev')}</summary>
+    <ol class="steps">
+      <li>Inicia sesión en iNaturalist (cuenta gratis).</li>
+      <li>Abre <a href="https://www.inaturalist.org/users/api_token" target="_blank" rel="noopener">inaturalist.org/users/api_token</a> y copia todo el texto.</li>
+      <li>Pégalo aquí. Dura 24 horas y solo queda en este dispositivo.</li>
+    </ol>
+    <div class="panel" style="padding:0;border:0;background:none;margin-top:10px"><div class="row">
+      <label class="input"><span class="sr">Token de iNaturalist</span><input id="tokIn" type="text" placeholder="Pega el token (eyJ…)" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+      <button class="btn primary" id="tokSave" type="button">${ic('check')}Guardar</button>
+    </div></div>
+  </details>`;
+}
+function validatorHTML(it){
+  return `<h3 class="sec">${ic('image-up')}${it ? 'Validar mi foto' : 'Identificar una foto'}</h3>
+    <label class="drop" for="vFile" id="vDrop">
+      ${ic('camera')}
+      <b>${it ? 'Sube tu foto de esta ave' : 'Sube la foto del ave'}</b>
+      <span class="note" style="margin:0">Desde la cámara o la galería. Si tiene GPS y fecha, se usan para afinar el resultado.</span>
+      <input id="vFile" type="file" accept="image/*">
+    </label>
+    <div id="vOut" style="display:flex;flex-direction:column;gap:12px;margin-top:12px"></div>
+    <div id="vTok" style="margin-top:6px">${tokenHTML()}</div>`;
+}
+function bindValidator(){
+  const f = $('vFile'); if(!f) return;
+  f.onchange = e => { const file = e.target.files && e.target.files[0]; if(file) takeFile(file); };
+  const drop = $('vDrop');
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add('over'); };
+  drop.ondragleave = () => drop.classList.remove('over');
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove('over'); const file = e.dataTransfer.files[0]; if(file) takeFile(file); };
+  bindToken();
+  if(upload) runValidation();
+}
+async function takeFile(file){
+  $('vOut').innerHTML = '<p class="note">Preparando foto<span class="loading-dots"></span></p>';
+  try{
+    const meta = await readExif(file).catch(() => ({}));
+    const blob = await shrink(file);
+    clearUpload();
+    upload = {blob, url:URL.createObjectURL(blob), ...meta};
+    runValidation();
+  }catch(err){ $('vOut').innerHTML = '<p class="note">No pude leer esa imagen. Prueba con un JPEG.</p>'; }
+}
+function bindToken(){
+  const s = $('tokSave');
+  if(s) s.onclick = () => {
+    let v = ($('tokIn').value || '').trim();
+    const m = v.match(/eyJ[\w-]+\.[\w-]+\.[\w-]+/); if(m) v = m[0];
+    if(v.length < 20){ $('tokIn').focus(); toast('Ese token no parece válido', 'triangle-alert'); return; }
+    setToken(v); $('vTok').innerHTML = tokenHTML(); bindToken();
+    toast('Token guardado', 'circle-check');
+    if(upload) runValidation();
+  };
+  const c = $('tokClear');
+  if(c) c.onclick = () => { setToken(''); $('vTok').innerHTML = tokenHTML(); bindToken(); };
+}
+async function shrink(file){
+  const url = URL.createObjectURL(file);
+  try{
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const max = 1280, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(img.naturalWidth * k); cv.height = Math.round(img.naturalHeight * k);
+    cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+    return await new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error('blob')), 'image/jpeg', 0.9));
+  } finally { URL.revokeObjectURL(url); }
+}
+/* Lector EXIF mínimo: GPS y fecha de captura de un JPEG */
+async function readExif(file){ return parseExif(await file.slice(0, 256 * 1024).arrayBuffer()); }
+function parseExif(buf){
+  const v = new DataView(buf);
+  if(v.byteLength < 4 || v.getUint16(0) !== 0xFFD8) return {};
+  let off = 2;
+  while(off + 4 < v.byteLength){
+    const marker = v.getUint16(off), size = v.getUint16(off + 2);
+    if((marker & 0xFF00) !== 0xFF00) break;
+    if(marker === 0xFFE1 && off + 10 < v.byteLength && v.getUint32(off + 4) === 0x45786966) return parseTiff(v, off + 10);
+    off += 2 + size;
+  }
+  return {};
+}
+function parseTiff(v, t){
+  const le = v.getUint16(t) === 0x4949;
+  const g16 = o => v.getUint16(o, le), g32 = o => v.getUint32(o, le);
+  const SZ = {1:1, 2:1, 3:2, 4:4, 5:8, 7:1, 9:4, 10:8};
+  function ifd(o){
+    const out = {}, n = g16(o);
+    for(let i = 0; i < n; i++){
+      const e = o + 2 + i * 12, tag = g16(e), type = g16(e + 2), count = g32(e + 4);
+      out[tag] = {type, count, ptr: (SZ[type] || 1) * count > 4 ? t + g32(e + 8) : e + 8, e};
+    }
+    return out;
+  }
+  const rat = (p, i) => { const d = g32(p + 8 * i + 4); return d ? g32(p + 8 * i) / d : 0; };
+  const str = (p, n) => { let s = ''; for(let i = 0; i < n; i++){ const c = v.getUint8(p + i); if(!c) break; s += String.fromCharCode(c); } return s; };
+  const res = {};
+  const i0 = ifd(t + g32(t + 4));
+  if(i0[0x8825]){
+    const gps = ifd(t + g32(i0[0x8825].e + 8));
+    if(gps[2] && gps[4]){
+      const dms = p => rat(p, 0) + rat(p, 1) / 60 + rat(p, 2) / 3600;
+      let lat = dms(gps[2].ptr), lng = dms(gps[4].ptr);
+      if(gps[1] && str(gps[1].ptr, 2) === 'S') lat = -lat;
+      if(gps[3] && str(gps[3].ptr, 2) === 'W') lng = -lng;
+      if(lat || lng){ res.lat = +lat.toFixed(5); res.lng = +lng.toFixed(5); }
+    }
+  }
+  if(i0[0x8769]){
+    const ex = ifd(t + g32(i0[0x8769].e + 8));
+    const dt = ex[0x9003] || ex[0x9004];
+    if(dt){ const m = str(dt.ptr, dt.count).match(/^(\d{4}):(\d{2}):(\d{2})/); if(m) res.date = `${m[1]}-${m[2]}-${m[3]}`; }
+  }
+  return res;
+}
+function geoHint(){
+  if(upload && upload.lat) return {lat:upload.lat, lng:upload.lng, src:'GPS de la foto'};
+  if(state.place.lat) return {lat:state.place.lat, lng:state.place.lng, src:'tu ubicación'};
+  if(state.place.loc) return {lat:state.place.loc[0], lng:state.place.loc[1], src:state.place.name};
+  return null;
+}
+async function scoreImage(){
+  const fd = new FormData();
+  fd.append('image', upload.blob, 'foto.jpg');
+  fd.append('locale', 'es');
+  fd.append('preferred_place_id', String(COLOMBIA));
+  const g = geoHint();
+  if(g){ fd.append('lat', g.lat); fd.append('lng', g.lng); }
+  if(upload.date) fd.append('observed_on', upload.date);
+  const res = await fetch(API + '/computervision/score_image', {method:'POST', headers:{Authorization:getToken()}, body:fd});
+  if(res.status === 401 || res.status === 403) throw new Error('token');
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  const d = await res.json();
+  const rows = (d.results || []).map(r => {
+    const t = r.taxon || {}, ph = t.default_photo || {};
+    return {id:t.id, n:t.preferred_common_name || '', s:t.name, p:medium(ph.medium_url || ph.square_url), score:Number(r.combined_score ?? r.vision_score ?? r.score ?? 0)};
+  }).filter(r => r.id);
+  const max = Math.max(...rows.map(r => r.score), 0);
+  if(max > 0 && max <= 1) rows.forEach(r => r.score *= 100);
+  const ca = d.common_ancestor && d.common_ancestor.taxon;
+  return {rows: rows.slice(0, 6), ancestor: ca ? {n:ca.preferred_common_name || '', s:ca.name} : null};
+}
+const verdictHTML = (kind, icon, title, body) => `<div class="verdict ${kind}">${ic(icon)}<div class="v"><b>${title}</b><span>${body}</span></div></div>`;
+async function runValidation(){
+  if(!upload || !$('vOut')) return;
+  const it = current, out = $('vOut');
+  const g = geoHint();
+  const meta = `<div class="exif"><span>${ic('map-pin', 'sm')}${upload.lat ? `${upload.lat}, ${upload.lng}` : 'Sin GPS en la foto'}</span>${upload.date ? `<span>${ic('calendar-days', 'sm')}${upload.date}</span>` : ''}${g && !upload.lat ? `<span>${ic('locate-fixed', 'sm')}Se usará ${esc(g.src)}</span>` : ''}</div>`;
+  const cmp = `<div class="cmp ${it && it.p ? '' : 'one'}"><figure><img src="${upload.url}" alt="Tu foto"><figcaption>Tu foto</figcaption></figure>${it && it.p ? `<figure><img src="${esc(it.p)}" alt=""><figcaption>Referencia</figcaption></figure>` : ''}</div>${meta}`;
+  if(!getToken()){
+    out.innerHTML = cmp + (it
+      ? verdictHTML('maybe', 'eye', 'Compáralas tú mismo', 'Fíjate en forma y color del pico, patrón de la cara y el ojo, barras en las alas y color de las patas. Para la verificación automática, activa el token abajo.')
+      : verdictHTML('maybe', 'sparkles', 'Falta activar el reconocimiento', 'Pega tu token de iNaturalist abajo y la foto se analiza sola.'));
+    const d = document.querySelector('#vTok details'); if(d) d.open = true;
+    return;
+  }
+  out.innerHTML = cmp + '<p class="note">Analizando con iNaturalist<span class="loading-dots"></span></p>';
+  try{
+    const {rows, ancestor} = await scoreImage();
+    if(current !== it || !$('vOut')) return;
+    const top = rows[0];
+    let verdict = '';
+    if(it){
+      const idx = rows.findIndex(r => r.id === it.id);
+      if(idx === 0 && top.score >= 50) verdict = verdictHTML('yes', 'circle-check', `Sí es ${esc(it.n || it.s)}`, `Primera sugerencia con ${pct(top.score)} de confianza.${has(it.id) ? '' : `</span><button class="btn primary sm" type="button" id="vMark" style="align-self:flex-start">${ic('plus', 'sm')}Marcar como fotografiada</button><span>`}`);
+      else if(idx >= 0) verdict = verdictHTML('maybe', 'circle-help', 'Posible, sin confirmar', `Aparece como opción ${idx + 1} (${pct(rows[idx].score)}). La sugerencia principal es <b>${esc(top.n || top.s)}</b> (${pct(top.score)}). Revisa los rasgos de identificación.`);
+      else if(top) verdict = verdictHTML('no', 'triangle-alert', 'No parece ser esta especie', `Tu foto se parece más a <b>${esc(top.n || top.s)}</b> (${pct(top.score)}).${ancestor ? ` Coincide al menos en: ${esc(ancestor.n || ancestor.s)}.` : ''}`);
+    } else if(top){
+      verdict = top.score >= 50
+        ? verdictHTML('yes', 'circle-check', esc(top.n || top.s), `Primera sugerencia con ${pct(top.score)} de confianza. Toca una opción para abrir su ficha.`)
+        : verdictHTML('maybe', 'circle-help', 'Sin certeza', `Ninguna opción supera el 50%.${ancestor ? ` Lo más seguro: ${esc(ancestor.n || ancestor.s)}.` : ''} Una foto más nítida o más cerca ayuda.`);
+    }
+    const list = rows.length ? `<div class="sugg">${rows.map(r => `<button type="button" data-sid="${r.id}" class="${it && r.id === it.id ? 'me' : ''}">
+        ${r.p ? `<img src="${esc(r.p)}" alt="">` : '<img alt="">'}
+        <span class="t"><span>${esc(r.n || r.s)}</span><i>${esc(r.s)}</i></span>
+        <span><span class="pct">${pct(r.score)}</span><span class="meter"><i style="width:${Math.min(100, Math.round(r.score))}%"></i></span></span></button>`).join('')}</div>` : '<p class="note">Sin sugerencias para esta foto.</p>';
+    out.innerHTML = cmp + verdict + list + '<p class="note">El reconocimiento es una ayuda, no una confirmación. Para que cuente como registro, súbela como observación a iNaturalist.</p>';
+    const vm = $('vMark'); if(vm) vm.onclick = () => { toggleLife(it.id); vm.remove(); };
+    out.querySelectorAll('[data-sid]').forEach(b => b.onclick = () => {
+      const r = rows.find(x => x.id == b.dataset.sid);
+      if(!r || (it && r.id === it.id)) return;
+      const known = state.items.find(x => x.id === r.id);
+      openSheet(known || {id:r.id, n:r.n, s:r.s, c:0, p:r.p, a:'', cs:'', th:false, en:false, anc:[]}, true);
+    });
+  }catch(err){
+    if(current !== it || !$('vOut')) return;
+    if(err.message === 'token'){
+      setToken(''); $('vTok').innerHTML = tokenHTML(); bindToken();
+      out.innerHTML = cmp + verdictHTML('no', 'triangle-alert', 'El token venció o no es válido', 'Genera uno nuevo en el enlace de abajo y pégalo otra vez.');
+    } else {
+      out.innerHTML = cmp + verdictHTML('no', 'wifi-off', 'No pude analizar la foto', 'Revisa tu conexión e intenta de nuevo. Mientras tanto, compárala con la referencia.');
+    }
+  }
+}
+function openIdentify(){
+  current = null; sheetMode = 'identify'; clearUpload();
+  sheetChrome('Identificar una foto', false, false);
+  $('sheetBody').innerHTML = `<div style="padding-top:18px" id="validator">${validatorHTML(null)}</div>`;
+  showSheet('#identificar');
+  bindValidator();
+}
+
+/* ---------- Mi lista ---------- */
+function openAccount(){
+  current = null; sheetMode = 'account';
+  sheetChrome('Mi lista', false, false);
+  const total = new Set([...life, ...inatSet]);
+  const here = state.items.filter(it => has(it.id));
+  const byFam = {};
+  state.items.forEach(it => {
+    const f = famOf(it); if(!f) return;
+    const k = famById[f].common || famById[f].name;
+    byFam[k] = byFam[k] || {t:0, h:0}; byFam[k].t++; if(has(it.id)) byFam[k].h++;
+  });
+  const famRows = Object.entries(byFam).filter(([, v]) => v.h > 0).sort((a, b) => b[1].h - a[1].h).slice(0, 10);
+  $('sheetBody').innerHTML = `
+    <div class="panel" style="margin-top:18px">
+      <h3 class="sec" style="margin:0">${ic('trophy')}Tu progreso</h3>
+      <div class="big">${fmt(total.size)}<small>especies fotografiadas</small></div>
+      <p>${fmt(here.length)} de ${fmt(state.items.length)} especies registradas en ${esc(state.place.lat ? 'tu zona' : state.place.name)}${state.items.length ? ` (${pct(here.length / state.items.length * 100)})` : ''}.</p>
+      ${famRows.length ? `<div class="bars">${famRows.map(([k, v]) => `<div><span>${esc(k)}</span><em><i style="width:${Math.round(v.h / v.t * 100)}%"></i></em><span>${v.h}/${v.t}</span></div>`).join('')}</div>` : '<p class="note" style="margin:0">Marca especies con el botón ＋ de cada foto o sincroniza tu cuenta de iNaturalist.</p>'}
+    </div>
+    <div class="panel">
+      <h3 class="sec" style="margin:0">${ic('refresh-cw')}Sincronizar con iNaturalist</h3>
+      <p>Escribe tu usuario y las especies de tus observaciones se marcan solas, en cualquier dispositivo. No pide contraseña ni token.</p>
+      <div class="row">
+        <label class="input">${ic('user')}<span class="sr">Usuario de iNaturalist</span><input id="inatUser" type="text" placeholder="tu_usuario" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(inat.user)}"></label>
+        <button class="btn primary" id="inatSync" type="button">${ic('refresh-cw')}Sincronizar</button>
+      </div>
+      <p class="note" id="inatMsg" style="margin:0">${inat.user ? `${fmt(inatSet.size)} especies de @${esc(inat.user)} · actualizado ${new Date(inat.at).toLocaleString('es-CO')}` : 'Sin sincronizar.'}</p>
+    </div>
+    <div class="panel">
+      <h3 class="sec" style="margin:0">${ic('copy')}Pasar mi lista a otro dispositivo</h3>
+      <p>Copia el código y pégalo en "Importar" en el otro dispositivo. Se suma a lo que ya haya allá.</p>
+      <button class="btn" id="exp" type="button">${ic('copy')}Copiar mi lista (${fmt(life.size)})</button>
+      <textarea class="area" id="impText" placeholder="Pega aquí el código de tu lista" aria-label="Código de lista para importar"></textarea>
+      <button class="btn" id="imp" type="button">${ic('clipboard-paste')}Importar</button>
+    </div>`;
+  showSheet('#mi-lista');
+  $('inatSync').onclick = () => syncInat($('inatUser').value.trim().replace(/^@/, ''), true);
+  $('inatUser').onkeydown = e => { if(e.key === 'Enter') $('inatSync').click(); };
+  $('exp').onclick = async () => {
+    const code = 'AVESCO:' + [...life].join(',');
+    try{ await navigator.clipboard.writeText(code); toast('Lista copiada', 'copy'); }
+    catch(e){ $('impText').value = code; $('impText').select(); toast('Selecciona y copia el texto', 'copy'); }
+  };
+  $('imp').onclick = () => {
+    const ids = ($('impText').value.match(/\d+/g) || []).map(Number).filter(n => n > 0);
+    if(!ids.length){ toast('No encontré especies en ese texto', 'triangle-alert'); return; }
+    const before = life.size; ids.forEach(id => life.add(id)); saveLife();
+    toast(`${fmt(life.size - before)} especies nuevas importadas`, 'circle-check');
+    render(); openAccount();
+  };
+}
+async function syncInat(user, verbose){
+  if(!user){ toast('Escribe tu usuario de iNaturalist', 'user'); return; }
+  const msg = $('inatMsg');
+  if(msg) msg.innerHTML = 'Sincronizando<span class="loading-dots"></span>';
+  try{
+    const ids = [];
+    let page = 1, pages = 1;
+    do{
+      const d = await api('/observations/species_counts', {user_login:user, taxon_id:AVES, per_page:500, page, _:Date.now()});
+      pages = Math.min(Math.ceil((d.total_results || 0) / 500), 10);
+      (d.results || []).forEach(r => r.taxon && ids.push(r.taxon.id));
+      page++;
+    } while(page <= pages);
+    inat = {user, ids, at:Date.now()}; inatSet = new Set(ids);
+    lsSet('aves-co-inat', inat);
+    if(verbose) toast(`${fmt(ids.length)} especies de @${user}`, 'circle-check');
+    if($('inatMsg')) $('inatMsg').textContent = `${fmt(ids.length)} especies de @${user} · actualizado ${new Date().toLocaleString('es-CO')}`;
+    render();
+  }catch(e){
+    if($('inatMsg')) $('inatMsg').textContent = 'No pude sincronizar. Revisa el usuario y tu conexión.';
+  }
+}
+
+/* ---------- Familias ---------- */
+async function loadFamilies(){
+  famList = [];
+  try{
+    const d = await api('/observations/species_counts', {...placeParams(), taxon_id:AVES, quality_grade:'research', hrank:'family', lrank:'family', per_page:500, locale:'es', preferred_place_id:COLOMBIA});
+    const fams = (d.results || []).map(r => r.taxon).filter(t => t && t.rank === 'family');
+    fams.forEach(t => { famById[t.id] = {name:t.name, common:t.preferred_common_name || ''}; });
+    famList = fams.map(t => ({id:t.id, name:t.name, common:t.preferred_common_name || ''}))
+      .sort((a, b) => (a.common || a.name).localeCompare(b.common || b.name, 'es'));
+    state.items.forEach(it => { delete it.f; });
+    if(state.items.length) render();
+  }catch(err){}
+}
+
+/* ---------- Acciones globales ---------- */
+function act(k){
+  vibrate();
+  if(k === 'identify') openIdentify();
+  else if(k === 'account') openAccount();
+  else if(k === 'random'){
+    const pool = state.filtered.length ? state.filtered : state.items;
+    if(pool.length) openSheet(pool[Math.floor(Math.random() * pool.length)]);
+  } else if(k === 'explore'){
+    if(topLayer()) closeTop(); else window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => act(b.dataset.act));
+let qT;
+$('q').addEventListener('input', e => {
+  $('qClear').hidden = !e.target.value;
+  clearTimeout(qT); qT = setTimeout(() => { state.q = e.target.value; render(); }, 150);
+});
+$('qClear').onclick = () => { $('q').value = ''; $('qClear').hidden = true; state.q = ''; render(); $('q').focus(); };
+document.querySelectorAll('[data-mine]').forEach(b => b.onclick = () => {
+  state.mine = b.dataset.mine; vibrate();
+  document.querySelectorAll('[data-mine]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  render();
+});
+function setViewBtns(){ document.querySelectorAll('[data-view]').forEach(x => x.setAttribute('aria-pressed', x.dataset.view === state.view)); }
+document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => { state.view = b.dataset.view; setViewBtns(); savePrefs(); render(); });
+
+/* ---------- Enlaces directos (#sp-123, #identificar, #mi-lista) ---------- */
+async function openFromHash(){
+  const h = location.hash;
+  if(!h) return;
+  try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){}
+  if(h === '#identificar') return openIdentify();
+  if(h === '#mi-lista') return openAccount();
+  const m = h.match(/^#sp-(\d+)$/); if(!m) return;
+  const id = +m[1];
+  let it = state.items.find(x => x.id === id);
+  if(!it){
+    try{
+      const d = await api(`/taxa/${id}`, {locale:'es', preferred_place_id:COLOMBIA});
+      const t = (d.results || [])[0]; if(!t) return;
+      const ph = t.default_photo || {};
+      it = {id, n:t.preferred_common_name || '', s:t.name, c:0, p:medium(ph.medium_url || ph.square_url), a:ph.attribution || '', cs:'', th:!!t.threatened, en:!!t.endemic, anc:t.ancestor_ids || []};
+    }catch(e){ return; }
+  }
+  openSheet(it);
+}
+
+/* ---------- Inicio ---------- */
+setViewBtns(); renderChips();
+loadFamilies();
+loadSpecies().then(openFromHash);
+if(inat.user && Date.now() - inat.at > 6 * 3600e3) syncInat(inat.user, false);
+if('serviceWorker' in navigator && location.protocol === 'https:'){
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>
