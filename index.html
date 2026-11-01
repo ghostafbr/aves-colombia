@@ -506,7 +506,7 @@ const state = {
   sort:'obs', q:'', view: saved.view || 'grid', mine:'all',
   items:[], filtered:[], shown:0, loadId:0, total:0
 };
-function savePrefs(){ lsSet('aves-co-prefs', {place: state.place.lat ? null : state.place, view: state.view, group: state.group, lens: state.lens}); }
+function savePrefs(){ lsSet('aves-co-prefs', {place: state.place.lat ? null : state.place, view: state.view, group: state.group, lens: state.lens}); cloudPrefs(); }
 const groupId = () => GROUPS[state.group].id;
 let life = new Set(lsGet('aves-co-life', []));
 let inat = lsGet('aves-co-inat', {user:'', ids:[], at:0});
@@ -932,7 +932,7 @@ function toggleLife(id){
   if(!life.has(id) && inatSet.has(id)){ toast('Ya está en tus observaciones de iNaturalist', 'globe'); return; }
   const add = !life.has(id);
   add ? life.add(id) : life.delete(id);
-  vibrate(); saveLife(); syncTick(id); updateMark();
+  vibrate(); saveLife(); syncTick(id); updateMark(); cloudToggle(id, add);
   toast(add ? 'Agregada a tu lista' : 'Quitada de tu lista', add ? 'circle-check' : 'x');
 }
 new IntersectionObserver(e => { if(e[0].isIntersecting && state.shown < state.filtered.length) more(); }, {rootMargin:'900px'}).observe($('sentinel'));
@@ -1347,7 +1347,8 @@ function accountView(){
   });
   const famRows = Object.entries(byFam).filter(([, v]) => v.h > 0).sort((a, b) => b[1].h - a[1].h).slice(0, 10);
   $('sheetBody').innerHTML = `
-    <div class="panel" style="margin-top:18px">
+    <div id="cloudPanel" style="margin-top:18px;display:flex;flex-direction:column">${cloudPanelHTML()}</div>
+    <div class="panel">
       <h3 class="sec" style="margin:0">${ic('trophy')}Tu progreso</h3>
       <div class="big">${fmt(total.size)}<small>especies fotografiadas</small></div>
       <p>${fmt(here.length)} de ${fmt(state.items.length)} especies registradas en ${esc(state.place.lat ? 'tu zona' : state.place.name)}${state.items.length ? ` (${pct(here.length / state.items.length * 100)})` : ''}.</p>
@@ -1369,6 +1370,7 @@ function accountView(){
       <textarea class="area" id="impText" placeholder="Pega aquí el código de tu lista" aria-label="Código de lista para importar"></textarea>
       <button class="btn" id="imp" type="button">${ic('clipboard-paste')}Importar</button>
     </div>`;
+  bindCloudPanel();
   $('inatSync').onclick = () => syncInat($('inatUser').value.trim().replace(/^@/, ''), true);
   $('inatUser').onkeydown = e => { if(e.key === 'Enter') $('inatSync').click(); };
   $('exp').onclick = async () => {
@@ -1379,7 +1381,7 @@ function accountView(){
   $('imp').onclick = () => {
     const ids = ($('impText').value.match(/\d+/g) || []).map(Number).filter(n => n > 0);
     if(!ids.length){ toast('No encontré especies en ese texto', 'triangle-alert'); return; }
-    const before = life.size; ids.forEach(id => life.add(id)); saveLife();
+    const before = life.size; ids.forEach(id => life.add(id)); saveLife(); cloudAddMany(ids);
     toast(`${fmt(life.size - before)} especies nuevas importadas`, 'circle-check');
     render(); accountView();
   };
@@ -1649,6 +1651,110 @@ function quizEndView(){
   $('qAgain').onclick = () => { quizStart(); $('sheetScroll').scrollTop = 0; };
 }
 
+/* ---------- Sincronización entre dispositivos (Firebase: Google + Firestore) ---------- */
+const FIREBASE_CONFIG = null; // se completa con la configuración web del proyecto de Firebase
+const FB_VER = '10.12.2';
+const cloud = {ready:false, error:false, user:null, db:null, unsub:null, prefsTimer:null, prefsApplied:false};
+function loadScript(src){
+  return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.async = true; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+}
+async function initCloud(){
+  if(!FIREBASE_CONFIG || cloud.ready) return;
+  try{
+    const base = `https://www.gstatic.com/firebasejs/${FB_VER}/`;
+    await loadScript(base + 'firebase-app-compat.js');
+    await Promise.all([loadScript(base + 'firebase-auth-compat.js'), loadScript(base + 'firebase-firestore-compat.js')]);
+    firebase.initializeApp(FIREBASE_CONFIG);
+    cloud.db = firebase.firestore();
+    cloud.ready = true;
+    firebase.auth().getRedirectResult().catch(() => {});
+    firebase.auth().onAuthStateChanged(onCloudUser);
+  }catch(e){ cloud.error = true; }
+  refreshCloudUI();
+}
+async function cloudSignIn(){
+  if(!cloud.ready) return;
+  const auth = firebase.auth(), prov = new firebase.auth.GoogleAuthProvider();
+  prov.setCustomParameters({prompt:'select_account'});
+  try{ await auth.signInWithPopup(prov); }
+  catch(e){
+    const code = (e && e.code) || '';
+    if(code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment'){ return auth.signInWithRedirect(prov); }
+    if(code === 'auth/unauthorized-domain') toast('Falta autorizar este dominio en Firebase', 'triangle-alert');
+    else if(code !== 'auth/popup-closed-by-user' && code !== 'auth/cancelled-popup-request') toast('No pude iniciar sesión' + (code ? ' (' + code.replace('auth/', '') + ')' : ''), 'triangle-alert');
+  }
+}
+function cloudSignOut(){ if(cloud.ready) firebase.auth().signOut().then(() => toast('Sesión cerrada. Tu lista sigue en este dispositivo', 'check')); }
+function userDoc(){ return cloud.db.collection('users').doc(cloud.user.uid); }
+const FV = () => firebase.firestore.FieldValue;
+async function onCloudUser(u){
+  if(cloud.unsub){ cloud.unsub(); cloud.unsub = null; }
+  cloud.user = u; cloud.prefsApplied = false;
+  refreshCloudUI();
+  if(!u) return;
+  const local = [...life];
+  try{
+    const data = {updatedAt: FV().serverTimestamp()};
+    if(local.length) data.life = FV().arrayUnion(...local);
+    await userDoc().set(data, {merge:true});
+  }catch(e){ toast('No pude subir tu lista local', 'wifi-off'); }
+  cloud.unsub = userDoc().onSnapshot(snap => {
+    const d = snap.data() || {};
+    const ids = (d.life || []).map(Number);
+    const changed = ids.length !== life.size || ids.some(x => !life.has(x));
+    if(!cloud.prefsApplied){ cloud.prefsApplied = true; applyCloudPrefs(d.prefs); toast('Lista sincronizada', 'circle-check'); }
+    if(changed){
+      life = new Set(ids); lsSet('aves-co-life', ids);
+      render(); updateMark();
+      if(sheetMode === 'account') accountView();
+    }
+  }, () => toast('No pude leer tu lista en la nube', 'wifi-off'));
+}
+function cloudToggle(id, add){
+  if(!cloud.user) return;
+  userDoc().set({life: add ? FV().arrayUnion(id) : FV().arrayRemove(id), updatedAt: FV().serverTimestamp()}, {merge:true})
+    .catch(() => toast('Sin conexión: se sincroniza al volver', 'wifi-off'));
+}
+function cloudAddMany(ids){
+  if(!cloud.user || !ids.length) return;
+  userDoc().set({life: FV().arrayUnion(...ids), updatedAt: FV().serverTimestamp()}, {merge:true}).catch(() => {});
+}
+function cloudPrefs(){
+  if(!cloud.user || !cloud.prefsApplied) return;
+  clearTimeout(cloud.prefsTimer);
+  cloud.prefsTimer = setTimeout(() => {
+    const place = state.place.lat ? null : JSON.parse(JSON.stringify(state.place));
+    userDoc().set({prefs:{lens:state.lens, group:state.group, view:state.view, place}}, {merge:true}).catch(() => {});
+  }, 800);
+}
+function applyCloudPrefs(p){
+  if(!p){ cloudPrefs(); return; }
+  let reload = false;
+  if(p.lens && LENSES[p.lens]) state.lens = p.lens;
+  if(p.view === 'grid' || p.view === 'list'){ state.view = p.view; setViewBtns(); }
+  if(p.group && GROUPS[p.group] && p.group !== state.group){
+    state.group = p.group; state.migr = false; state.reach = '';
+    $('heroGroup').textContent = GROUPS[p.group].noun; $('q').placeholder = GROUPS[p.group].ph;
+    reload = true;
+  }
+  if(p.place && p.place.id && p.place.id !== state.place.id && !state.place.lat){ state.place = p.place; reload = true; }
+  lsSet('aves-co-prefs', {place: state.place.lat ? null : state.place, view: state.view, group: state.group, lens: state.lens});
+  if(reload){ state.family = ''; loadFamilies(); loadSpecies(); } else render();
+}
+function cloudPanelHTML(){
+  if(!FIREBASE_CONFIG) return '';
+  const head = `<h3 class="sec" style="margin:0">${ic('refresh-cw')}Sincronizar entre dispositivos</h3>`;
+  if(cloud.error) return `<div class="panel">${head}<p>No pude cargar la sincronización. Revisa tu conexión y vuelve a abrir la app.</p></div>`;
+  if(!cloud.ready) return `<div class="panel">${head}<p class="note" style="margin:0">Cargando<span class="loading-dots"></span></p></div>`;
+  if(!cloud.user) return `<div class="panel">${head}<p>Entra con tu cuenta de Google en el PC y en el celular: lo que marques en uno aparece en el otro.</p><button class="btn primary" id="cloudIn" type="button">${ic('user')}Entrar con Google</button></div>`;
+  return `<div class="panel">${head}<p>${ic('circle-check', 'sm')} Sincronizada con <b>${esc(cloud.user.email || cloud.user.displayName || 'tu cuenta')}</b>. Tu lista, el lente, el grupo y el lugar se guardan solos.</p><button class="btn" id="cloudOut" type="button">${ic('x')}Cerrar sesión</button></div>`;
+}
+function bindCloudPanel(){
+  if($('cloudIn')) $('cloudIn').onclick = cloudSignIn;
+  if($('cloudOut')) $('cloudOut').onclick = cloudSignOut;
+}
+function refreshCloudUI(){ if($('cloudPanel')){ $('cloudPanel').innerHTML = cloudPanelHTML(); bindCloudPanel(); } }
+
 /* ---------- Familias ---------- */
 async function loadFamilies(){
   famList = [];
@@ -1719,7 +1825,7 @@ async function openFromHash(){
 setViewBtns(); renderChips();
 $('heroGroup').textContent = GROUPS[state.group].noun; $('q').placeholder = GROUPS[state.group].ph;
 loadFamilies();
-loadSpecies().then(openFromHash);
+loadSpecies().then(openFromHash).finally(initCloud);
 if(inat.user && Date.now() - inat.at > 6 * 3600e3) syncInat(inat.user, false);
 if('serviceWorker' in navigator && location.protocol === 'https:'){
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
